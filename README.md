@@ -27,7 +27,7 @@ Current behavior:
 Current packaging flow:
 1. Run `build_SuperEagleEye.ps1` or `build_SuperEagleEye.bat`
 2. Packaging output is generated under `dist\SuperEagleEye\`
-3. Packaging also refreshes `..\..\tools\SuperEagleEye_dist\`
+3. Packaging refreshes `dist\SuperEagleEye_dist\`
 4. During `SuperCarter` publish, those files are included under `<publish>\dist\`
 5. Runtime resolution in WPF points to `<SuperCarter publish>\dist\SuperEagleEye.exe`
 

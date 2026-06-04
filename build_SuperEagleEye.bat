@@ -17,6 +17,5 @@ if errorlevel 1 (
 )
 
 echo [SEE] Build complete.
-echo [SEE] Output: %SCRIPT_DIR%..\..\tools\SuperEagleEye_dist
-echo [SEE] Output: %SCRIPT_DIR%..\..\bin\Debug\dist\SuperEagleEye_dist
+echo [SEE] Output: %SCRIPT_DIR%dist\SuperEagleEye_dist
 exit /b 0

@@ -7,14 +7,14 @@ This document describes how `SEE` is deployed with `SuperCarter`.
 This is the default deployment path for release builds.
 
 Flow:
-1. Run `build_SuperEagleEye.ps1` in `Camera\camera_v2`.
+1. Run `build_SuperEagleEye.ps1` in the repository root.
 2. The script packages `SuperEagleEye.py` into `SuperEagleEye.exe`.
-3. The packaged runtime is copied into `tools\SuperEagleEye_dist`.
+3. The packaged runtime is copied into `dist\SuperEagleEye_dist`.
 4. During `SuperCarter` publish, those files are included in `config\SuperEagleEye\...`.
 
 Relevant files:
-- `Camera\camera_v2\build_SuperEagleEye.ps1`
-- `Camera\camera_v2\SuperEagleEye.py`
+- `build_SuperEagleEye.ps1`
+- `SuperEagleEye.py`
 - `SuperCarter.csproj`
 
 ## 2. Local Override Deployment

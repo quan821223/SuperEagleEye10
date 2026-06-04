@@ -152,6 +152,25 @@ class _LoggerStream:
             self.logger.log(self.level, line)
 
 
+class _ConsoleOnceFilter(logging.Filter):
+    def __init__(self, prefixes: Tuple[str, ...]):
+        super().__init__()
+        self.prefixes = prefixes
+        self._seen: set[str] = set()
+        self._lock = threading.Lock()
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        message = record.getMessage()
+        key = next((prefix for prefix in self.prefixes if message.startswith(prefix)), None)
+        if key is None:
+            return True
+        with self._lock:
+            if key in self._seen:
+                return False
+            self._seen.add(key)
+            return True
+
+
 def configure_runtime_logging(instance_id: str, grpc_port: int) -> Path:
     log_path = build_runtime_log_path(instance_id, grpc_port)
     log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -177,6 +196,16 @@ def configure_runtime_logging(instance_id: str, grpc_port: int) -> Path:
     console_handler = logging.StreamHandler(sys.__stdout__)
     console_handler.setFormatter(formatter)
     console_handler.setLevel(logging.INFO)
+    console_handler.addFilter(
+        _ConsoleOnceFilter(
+            (
+                "grpc_connection_state_changed",
+                "grpc_heartbeat_request",
+                "grpc_heartbeat_response",
+                "grpc_heartbeat client_id=",
+            )
+        )
+    )
     logger.addHandler(console_handler)
 
     sys.stdout = _LoggerStream(logger, logging.INFO)
@@ -207,34 +236,44 @@ def acquire_single_instance_lock(instance_id: str = "default") -> bool:
 
 
 def resolve_shared_secret(cli_value: str) -> str:
+    def _persist_secret(secret_value: str) -> None:
+        APP_RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+        try:
+            runtime_secret_path().write_text(secret_value, encoding="utf-8")
+        except OSError as exc:
+            LOGGER.warning("shared_secret_persist_failed path=%s error=%s", runtime_secret_path(), exc)
+
     if cli_value and cli_value.strip():
         secret = cli_value.strip()
-        APP_RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
-        runtime_secret_path().write_text(secret, encoding="utf-8")
+        _persist_secret(secret)
         return secret
 
     env_value = os.environ.get(SHARED_SECRET_ENV_VAR, "").strip()
     if env_value:
-        APP_RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
-        runtime_secret_path().write_text(env_value, encoding="utf-8")
+        _persist_secret(env_value)
         return env_value
 
     secret_path = runtime_secret_path()
     if secret_path.exists():
-        secret = secret_path.read_text(encoding="utf-8").strip()
-        if secret:
-            return secret
+        try:
+            secret = secret_path.read_text(encoding="utf-8").strip()
+            if secret:
+                return secret
+        except OSError as exc:
+            LOGGER.warning("shared_secret_read_failed path=%s error=%s", secret_path, exc)
 
     if LEGACY_SECRET_PATH.exists():
-        legacy = LEGACY_SECRET_PATH.read_text(encoding="utf-8").strip()
+        try:
+            legacy = LEGACY_SECRET_PATH.read_text(encoding="utf-8").strip()
+        except OSError as exc:
+            LOGGER.warning("shared_secret_legacy_read_failed path=%s error=%s", LEGACY_SECRET_PATH, exc)
+            legacy = ""
         if legacy:
-            APP_RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
-            secret_path.write_text(legacy, encoding="utf-8")
+            _persist_secret(legacy)
             return legacy
 
-    APP_RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
     generated = uuid.uuid4().hex + uuid.uuid4().hex
-    secret_path.write_text(generated, encoding="utf-8")
+    _persist_secret(generated)
     return generated
 
 
@@ -268,9 +307,12 @@ def ensure_proto_generated(base_dir: Path) -> None:
         f"--grpc_python_out={base_dir}",
         str(proto_path),
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    # Do not let the host console code page crash proto generation on Windows.
+    result = subprocess.run(cmd, capture_output=True, check=False)
+    stdout = _decode_shell_output(result.stdout).strip()
+    stderr = _decode_shell_output(result.stderr).strip()
     if result.returncode != 0:
-        raise RuntimeError(f"Failed to generate gRPC Python files: {result.stderr or result.stdout}")
+        raise RuntimeError(f"Failed to generate gRPC Python files: {stderr or stdout}")
 
 
 def get_base_dir() -> Path:

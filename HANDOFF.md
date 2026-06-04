@@ -93,8 +93,7 @@ or
 
 Current packaging behavior:
 
-- output is copied to `..\..\tools\SuperEagleEye_dist`
-- output is also copied to `..\..\bin\Debug\dist\SuperEagleEye_dist`
+- output is copied to `dist\SuperEagleEye_dist`
 
 Inspect repo state:
 
@@ -121,9 +120,7 @@ refresh_cameras
 - Added manual `refresh_cameras` / `refresh` CLI command
 - Updated CLI help and docs to mention the new command
 - Expanded `camera_map.json` to fixed `cam0`..`cam9` slots
-- Updated build scripts so packaging copies to both:
-  - `tools\SuperEagleEye_dist`
-  - `bin\Debug\dist\SuperEagleEye_dist`
+- Updated build scripts so packaging copies to `dist\SuperEagleEye_dist`
 - Added handoff documentation
 
 ## Known Issues / Current Risks
