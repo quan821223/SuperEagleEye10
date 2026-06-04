@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>SuperEagleEye &lpar;SEE&lowbar;1&period;0&rpar;  Developer Guide</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="supereagleeye-see_10--developer-guide">SuperEagleEye (SEE_1.0)  Developer Guide</h1>
+<p><em>AMSC_MGMDA0 · DQA</em></p>
+<p><em>SEE Software Version: at least 1.2.0</em>
+<em>Document Version: 0.2</em></p>
+<p>Developer-oriented documentation for the <code>camera_v2</code> runtime used by SEE.</p>
+<p>If you are looking for operator instructions, read <code>README_user.md</code>.</p>
+<h2 id="overview">Overview</h2>
+<p><code>SuperEagleEye.py</code> is the camera runtime used by SEE.</p>
+<p>Current behavior:</p>
+<ul>
+<li><code>SEE_1.0</code> exposes gRPC on <code>127.0.0.1:50051</code></li>
+<li><code>SuperCarter</code> connects as gRPC client and sends heartbeat every second</li>
+<li>runtime is resolved from the published <code>dist</code> folder under <code>SuperCarter</code></li>
+<li>on startup, discovered cameras are assigned to fixed logical slots such as <code>cam0</code>, <code>cam1</code>, <code>cam2</code></li>
+<li>operators should work with logical camera ids, not Windows <code>device_index</code></li>
+<li>current runtime flow is one camera session per thread</li>
+</ul>
+<h2 id="runtime-and-packaging">Runtime and Packaging</h2>
+<p>Current packaging flow:</p>
+<ol>
+<li>Run <code>build_SuperEagleEye.ps1</code> or <code>build_SuperEagleEye.bat</code></li>
+<li>Packaging output is generated under <code>dist\SuperEagleEye\</code></li>
+<li>Packaging also refreshes <code>..\..\tools\SuperEagleEye_dist\</code></li>
+<li>During <code>SuperCarter</code> publish, those files are included under <code>&lt;publish&gt;\dist\</code></li>
+<li>Runtime resolution in WPF points to <code>&lt;SuperCarter publish&gt;\dist\SuperEagleEye.exe</code></li>
+</ol>
+<p>Build commands:</p>
+<pre><code class="language-powershell">powershell <span class="hljs-literal">-ExecutionPolicy</span> Bypass <span class="hljs-operator">-File</span> .\build_SuperEagleEye.ps1
+</code></pre>
+<p>or</p>
+<pre><code class="language-powershell">.\build_SuperEagleEye.bat
+</code></pre>
+<p>Important notes:</p>
+<ul>
+<li><code>deploy_SuperEagleEye_to_local_runtime.bat</code> no longer deploys to <code>%LOCALAPPDATA%</code></li>
+<li>runtime execution should come from the local or published <code>dist</code> folder only</li>
+</ul>
+<h2 id="shared-secret">Shared Secret</h2>
+<p>Current shared secret behavior:</p>
+<ul>
+<li>shared secret file remains <code>%LOCALAPPDATA%\SEE\runtime\SuperEagleEye.secret</code></li>
+<li>legacy <code>config\SuperEagleEye.secret</code> is still migrated when present</li>
+<li>manual startup can still pass <code>--auth_token</code></li>
+<li>runtime binary location moved to <code>dist</code>, but the auth token storage location did not change</li>
+</ul>
+<h2 id="cli-startup-arguments">CLI Startup Arguments</h2>
+<ul>
+<li><code>--frame_width</code>: output frame width in pixels</li>
+<li><code>--frame_height</code>: output frame height in pixels</li>
+<li><code>--frame_rate</code>: preview and recording FPS target</li>
+<li><code>--recording_duration</code>: maximum seconds per recording segment</li>
+<li><code>--max_foldersize</code>: allowed folder size in GB</li>
+<li><code>--save_path</code>: output folder for snapshots and recordings</li>
+<li><code>--auth_token</code>: shared secret for gRPC control</li>
+</ul>
+<h2 id="logical-camera-model">Logical Camera Model</h2>
+<p>Current logical camera model:</p>
+<ul>
+<li><code>cam0</code>, <code>cam1</code>, <code>cam2</code> are logical slots</li>
+<li>startup auto-assigns discovered cameras to those logical slots and opens them</li>
+<li><code>open cam1</code> means reopen logical slot <code>cam1</code></li>
+<li><code>close cam1</code> means close logical slot <code>cam1</code></li>
+<li><code>swap cam0 cam1</code> swaps the hardware assignments behind those logical slots</li>
+<li><code>change cam0 cam1</code> is kept as an alias of <code>swap</code></li>
+<li>operators should not need to manually care about <code>device_index</code> during normal use</li>
+</ul>
+<p>Diagnostics:</p>
+<ul>
+<li><code>list</code> shows opened logical sessions</li>
+<li><code>list_devices</code> shows discovered devices plus metadata such as <code>device_id</code>, <code>pnp_device_id</code>, <code>assigned_camera_id</code>, and <code>opened_camera_id</code></li>
+</ul>
+<h2 id="interactive-terminal-commands">Interactive Terminal Commands</h2>
+<p>These commands are available only when running <code>SEE_1.0</code> directly in its console.</p>
+<h3 id="status-and-discovery">Status and Discovery</h3>
+<pre><code class="language-text">status
+list
+list_devices
+config cam0
+record_state cam0
+</code></pre>
+<ul>
+<li><code>status</code>: runtime status and heartbeat/reconnect state</li>
+<li><code>list</code>: opened logical camera sessions</li>
+<li><code>list_devices</code>: discovered devices and current logical-slot bindings</li>
+<li><code>config &lt;camera_id&gt;</code>: query width, height, fps, recording duration, and folder size limits</li>
+<li><code>record_state &lt;camera_id&gt;</code>: query recording state</li>
+</ul>
+<h3 id="capture-and-recording">Capture and Recording</h3>
+<pre><code class="language-text">snapshot cam0
+record_start cam0 60
+record_stop cam0
+open_output_folder
+</code></pre>
+<ul>
+<li><code>snapshot &lt;camera_id&gt;</code>: capture one frame to the current output folder</li>
+<li><code>record_start &lt;camera_id&gt; &lt;duration_sec&gt;</code>: start segmented recording</li>
+<li><code>record_stop &lt;camera_id&gt;</code>: stop recording</li>
+<li><code>open_output_folder</code>: open the active output folder in Windows Explorer</li>
+</ul>
+<h3 id="camera-lifecycle">Camera Lifecycle</h3>
+<pre><code class="language-text">open cam1
+close cam1
+swap cam0 cam1
+change cam0 cam1
+set cam0 width=1280 height=720 fps=20
+exit
+</code></pre>
+<ul>
+<li><code>open &lt;camera_id&gt;</code>: reopen an assigned logical camera slot</li>
+<li><code>close &lt;camera_id&gt;</code>: close a logical camera slot</li>
+<li><code>swap &lt;camera_id_a&gt; &lt;camera_id_b&gt;</code>: swap hardware bindings between two logical slots</li>
+<li><code>change &lt;camera_id_a&gt; &lt;camera_id_b&gt;</code>: alias of <code>swap</code></li>
+<li><code>set &lt;camera_id&gt; key=value ...</code>: update runtime config for the selected logical camera</li>
+<li><code>exit</code>: shutdown runtime</li>
+</ul>
+<p>Console output behavior:</p>
+<ul>
+<li>command-type instructions print <code>ack: C3 0D 0A</code></li>
+<li>query-type instructions print JSON plus the encoded response frame</li>
+</ul>
+<h2 id="grpc-contract">gRPC Contract</h2>
+<p>Proto file:</p>
+<ul>
+<li><code>SC_communication_gRPC.proto</code></li>
+</ul>
+<p>Used RPCs for <code>SEE_1.0</code>:</p>
+<ul>
+<li><code>Heartbeat(HeartbeatRequest) returns (HeartbeatResponse)</code></li>
+<li><code>ExecuteCameraCommand(CommandRequest) returns (CommandReply)</code></li>
+<li><code>QueryCameraState(QueryRequest) returns (QueryReply)</code></li>
+</ul>
+<p>Supported command RPC usage in current implementation:</p>
+<ul>
+<li><code>PING</code></li>
+<li><code>OPEN_CAMERA</code></li>
+<li><code>CLOSE_CAMERA</code></li>
+<li><code>START_RECORD</code></li>
+<li><code>STOP_RECORD</code></li>
+<li><code>CAPTURE_SNAPSHOT</code></li>
+<li><code>SET_CAMERA_CONFIG</code></li>
+<li><code>SET_OUTPUT_ROOT</code></li>
+<li><code>OPEN_OUTPUT_FOLDER</code></li>
+<li><code>SHUTDOWN</code></li>
+<li><code>SWAP_CAMERAS</code></li>
+</ul>
+<p>Supported query RPC usage:</p>
+<ul>
+<li><code>GET_STATUS</code></li>
+<li><code>LIST_CAMERAS</code></li>
+<li><code>LIST_DEVICES</code></li>
+<li><code>GET_CAMERA_CONFIG</code></li>
+<li><code>GET_RECORD_STATE</code></li>
+</ul>
+<h3 id="supercarter-command-reference">SuperCarter Command Reference</h3>
+<p>The following table describes the full command set that <code>SuperCarter</code> can send to <code>SEE_1.0</code>
+through <code>ExecuteCameraCommand(CommandRequest)</code>.</p>
+<p>General request fields:</p>
+<ul>
+<li><code>command</code>: command name such as <code>CAPTURE_SNAPSHOT</code></li>
+<li><code>camera_id</code>: logical camera slot such as <code>cam0</code>, <code>cam1</code>, <code>cam2</code>; all camera-targeting commands must fill this field explicitly</li>
+<li><code>args_json</code>: JSON object encoded as UTF-8 text; include it only when extra arguments are needed</li>
+<li><code>auth_token</code>: shared secret from <code>%LOCALAPPDATA%\SEE\runtime\SuperEagleEye.secret</code></li>
+<li><code>request_id</code>: caller-generated id for request tracking</li>
+<li><code>source</code>: caller label, typically <code>SuperCarter</code> or <code>grpc</code></li>
+</ul>
+<p>Camera targeting rule:</p>
+<ul>
+<li>the command name itself stays generic, for example <code>CAPTURE_SNAPSHOT</code></li>
+<li>the actual target camera is selected by <code>camera_id</code></li>
+<li>this means <code>SuperCarter</code> must explicitly fill <code>camera_id = &quot;cam0&quot;</code> or <code>camera_id = &quot;cam1&quot;</code> for camera-specific actions</li>
+<li>do not assume the runtime will infer the target camera from the command name alone</li>
+</ul>
+<h4 id="ping"><code>PING</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>verify that the runtime is alive and responsive</li>
+<li>check current connection state seen by the runtime</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;PING&quot;</code></li>
+<li><code>camera_id</code> may be empty or <code>cam0</code></li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>ack_hex</code></li>
+<li><code>connection_state</code></li>
+</ul>
+<p>Typical use:</p>
+<ul>
+<li>lightweight health check before sending camera-specific actions</li>
+</ul>
+<p><strong>ex:</strong> <code>PING</code></p>
+<h4 id="open_camera"><code>OPEN_CAMERA</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>open or reopen a logical camera slot such as <code>cam0</code></li>
+<li>bind that logical slot to its currently assigned hardware descriptor</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;OPEN_CAMERA&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot; this field is the actual target selector</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li>full camera status object from the opened session</li>
+<li>includes <code>camera_id</code>, <code>device_index</code>, <code>friendly_name</code>, <code>opened</code>, <code>recording</code>, <code>width</code>, <code>height</code>, <code>fps</code></li>
+</ul>
+<p>Failure cases:</p>
+<ul>
+<li><code>CAMERA_BUSY</code> when the logical slot is already open</li>
+<li><code>CAMERA_NOT_FOUND</code> when the slot has no assignment</li>
+</ul>
+<p>Typical use:</p>
+<ul>
+<li>reopen a preview after a manual close</li>
+<li>reopen a slot after swapping camera assignments</li>
+</ul>
+<p><strong>ex:</strong> <code>OPEN_CAMERA cam0</code></p>
+<h4 id="close_camera"><code>CLOSE_CAMERA</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>close one logical camera slot and stop its preview and recording state</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;CLOSE_CAMERA&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot; this field is the actual target selector</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>camera_id</code></li>
+<li><code>closed = true</code></li>
+</ul>
+<p>Typical use:</p>
+<ul>
+<li>stop one preview window without shutting down the whole runtime</li>
+</ul>
+<p><strong>ex:</strong> <code>CLOSE_CAMERA cam1</code></p>
+<h4 id="swap_cameras"><code>SWAP_CAMERAS</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>swap the hardware assignments behind two logical camera slots</li>
+</ul>
+<p>String command syntax:</p>
+<pre><code class="language-text">SWAP_CAMERAS [source_camera_id] [target_camera_id]
+</code></pre>
+<p>Explanation:</p>
+<ul>
+<li><code>source_camera_id</code>: the logical slot to swap from</li>
+<li><code>target_camera_id</code>: the logical slot to swap with</li>
+<li>this command exchanges the hardware bindings behind those two logical slots</li>
+</ul>
+<p>Structured RPC note:</p>
+<ul>
+<li>current RPC implementation still carries these values through <code>args_json</code></li>
+<li>the caller should provide:
+<ul>
+<li><code>source_camera_id</code></li>
+<li><code>target_camera_id</code></li>
+</ul>
+</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li>updated binding information for the affected logical slots</li>
+</ul>
+<p>Typical use:</p>
+<ul>
+<li>when two USB cameras are reversed relative to the expected <code>cam0</code> / <code>cam1</code> view</li>
+</ul>
+<p><strong>ex:</strong> <code>SWAP_CAMERAS cam0 cam6</code></p>
+<h4 id="start_record"><code>START_RECORD</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>start segmented recording on one logical camera slot</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;START_RECORD&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot; this field is the actual target selector</li>
+<li><code>args_json</code> may include:
+<ul>
+<li><code>duration_sec</code></li>
+<li><code>output_dir</code></li>
+<li><code>file_prefix</code></li>
+</ul>
+</li>
+</ul>
+<p>Example <code>args_json</code>:</p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;duration_sec&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">60</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;file_prefix&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cam0&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>Successful payload:</p>
+<ul>
+<li><code>camera_id</code></li>
+<li><code>recording = true</code></li>
+<li><code>duration_sec</code></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>recording requires the target camera to already be opened and receiving frames</li>
+</ul>
+<p><strong>ex:</strong> <code>START_RECORD cam0 {&quot;duration_sec&quot;:60}</code></p>
+<h4 id="stop_record"><code>STOP_RECORD</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>stop recording on one logical camera slot</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;STOP_RECORD&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot; this field is the actual target selector</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>camera_id</code></li>
+<li><code>recording = false</code></li>
+</ul>
+<p><strong>ex:</strong> <code>STOP_RECORD cam0</code></p>
+<h4 id="capture_snapshot"><code>CAPTURE_SNAPSHOT</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>capture one still frame from an opened logical camera slot</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;CAPTURE_SNAPSHOT&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot; this field is the actual target selector</li>
+<li><code>camera_id = &quot;all&quot;</code> is also supported for a broadcast-style snapshot across every opened logical camera</li>
+<li><code>args_json</code> may be empty or may include <code>output_path</code></li>
+</ul>
+<p>String command syntax:</p>
+<pre><code class="language-text">CAPTURE_SNAPSHOT [cam0|cam1|cam2|all]
+</code></pre>
+<p>Target definition:</p>
+<ul>
+<li><code>cam0|cam1|cam2</code>: capture one still frame from the specified logical camera slot</li>
+<li><code>all</code>: capture one still frame from every currently opened logical camera</li>
+</ul>
+<p>Accepted target values:</p>
+<ul>
+<li><code>cam0|cam1|cam2|all</code></li>
+<li><code>0|1|2</code></li>
+</ul>
+<p>Structured RPC formula:</p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;CAPTURE_SNAPSHOT&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;camera_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&lt;cam0|cam1|cam2|all&gt;&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;args_json&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;{} | {\&quot;output_path\&quot;:\&quot;D:\\\\temp\\\\cam0.jpg\&quot;}&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>Successful payload:</p>
+<ul>
+<li><code>camera_id</code></li>
+<li><code>snapshot_path</code></li>
+</ul>
+<p><strong>Note:</strong></p>
+<ul>
+<li>this is the command <code>SuperCarter</code> should send when it wants SEE to perform a screenshot</li>
+</ul>
+<p><code>ALL</code> behavior:</p>
+<ul>
+<li>when <code>camera_id = &quot;all&quot;</code>, the runtime captures one frame from every currently opened logical camera</li>
+<li>in this mode the payload returns:
+<ul>
+<li><code>camera_id = &quot;all&quot;</code></li>
+<li><code>snapshots</code>: list of <code>{ camera_id, snapshot_path }</code></li>
+<li><code>count</code>: number of snapshots captured</li>
+</ul>
+</li>
+<li><code>output_path</code> should not be combined with <code>all</code>; let the runtime generate per-camera filenames automatically</li>
+</ul>
+<p>Constraint:</p>
+<ul>
+<li><code>all</code> is currently supported for <code>CAPTURE_SNAPSHOT</code> only</li>
+<li>single-camera commands such as <code>OPEN_CAMERA</code>, <code>CLOSE_CAMERA</code>, and <code>SET_CAMERA_CONFIG</code> must still use one explicit <code>camera_id</code></li>
+</ul>
+<p><strong>ex:</strong> <code>CAPTURE_SNAPSHOT cam0</code>, <code>CAPTURE_SNAPSHOT all</code></p>
+<h4 id="set_camera_config"><code>SET_CAMERA_CONFIG</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>update runtime capture settings on one logical camera slot</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;SET_CAMERA_CONFIG&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot; this field is the actual target selector</li>
+<li><code>args_json</code> must include at least one of:
+<ul>
+<li><code>width</code></li>
+<li><code>height</code></li>
+<li><code>fps</code></li>
+<li><code>recording_duration</code></li>
+<li><code>max_folder_size_gb</code></li>
+</ul>
+</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li>current full status for that logical camera after config changes</li>
+</ul>
+<p><strong>ex:</strong> <code>SET_CAMERA_CONFIG cam0 {&quot;width&quot;:1280,&quot;height&quot;:720,&quot;fps&quot;:20}</code></p>
+<h4 id="set_output_root"><code>SET_OUTPUT_ROOT</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>update the default save folder used by snapshots and recordings</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;SET_OUTPUT_ROOT&quot;</code></li>
+<li><code>camera_id</code> may be empty or <code>cam0</code></li>
+<li><code>args_json</code> must include either:
+<ul>
+<li><code>output_dir</code></li>
+<li><code>save_path</code></li>
+</ul>
+</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li>resolved <code>output_dir</code></li>
+</ul>
+<p>Typical use:</p>
+<ul>
+<li><code>SuperCarter</code> should send this after startup so SEE writes files into the current operator-selected folder</li>
+</ul>
+<p><strong>ex:</strong> <code>SET_OUTPUT_ROOT {&quot;output_dir&quot;:&quot;D:\\capture_output&quot;}</code></p>
+<p>Alternative syntax:</p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;save_path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;D:\\capture_output&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="open_output_folder"><code>OPEN_OUTPUT_FOLDER</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>ask the runtime which output folder is currently active</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;OPEN_OUTPUT_FOLDER&quot;</code></li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li>resolved <code>output_dir</code></li>
+</ul>
+<p>Note:</p>
+<ul>
+<li>current implementation returns the folder path; the caller decides whether to open Explorer</li>
+</ul>
+<p><strong>ex:</strong> <code>OPEN_OUTPUT_FOLDER</code></p>
+<h4 id="shutdown"><code>SHUTDOWN</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>request full SEE runtime shutdown</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>command = &quot;SHUTDOWN&quot;</code></li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>shutdown = true</code></li>
+</ul>
+<p>Typical use:</p>
+<ul>
+<li>stop button in <code>SuperCarter</code></li>
+</ul>
+<p><strong>ex:</strong> <code>SHUTDOWN</code></p>
+<h3 id="supercarter-query-reference">SuperCarter Query Reference</h3>
+<p>The following query set is sent through <code>QueryCameraState(QueryRequest)</code>.</p>
+<p>General request fields:</p>
+<ul>
+<li><code>query</code>: query name such as <code>GET_STATUS</code></li>
+<li><code>camera_id</code>: required for camera-specific queries and must be explicitly filled with <code>cam0</code>, <code>cam1</code>, or <code>cam2</code></li>
+<li><code>args_json</code>: JSON object when the query needs extra arguments</li>
+</ul>
+<h4 id="get_status"><code>GET_STATUS</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>retrieve runtime-level state</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>connection_state</code></li>
+<li><code>uptime_sec</code></li>
+<li><code>camera_count</code></li>
+<li><code>default_camera_id</code></li>
+<li><code>recording_cameras</code></li>
+</ul>
+<p><strong>ex:</strong> <code>GET_STATUS</code></p>
+<h4 id="list_cameras"><code>LIST_CAMERAS</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>list all currently opened logical sessions</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>cameras</code></li>
+</ul>
+<p>Each camera entry includes:</p>
+<ul>
+<li><code>camera_id</code></li>
+<li><code>device_index</code></li>
+<li><code>friendly_name</code></li>
+<li><code>opened</code></li>
+<li><code>recording</code></li>
+<li><code>width</code></li>
+<li><code>height</code></li>
+<li><code>fps</code></li>
+</ul>
+<p><strong>ex:</strong> <code>LIST_CAMERAS</code></p>
+<h4 id="list_devices"><code>LIST_DEVICES</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>list discovered physical devices and their logical-slot assignments</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>devices</code></li>
+</ul>
+<p>Each device entry may include:</p>
+<ul>
+<li><code>camera_index</code></li>
+<li><code>device_index</code></li>
+<li><code>friendly_name</code></li>
+<li><code>device_id</code></li>
+<li><code>pnp_device_id</code></li>
+<li><code>location_information</code></li>
+<li><code>manufacturer</code></li>
+<li><code>is_external</code></li>
+<li><code>assigned_camera_id</code></li>
+<li><code>opened_camera_id</code></li>
+</ul>
+<p>Typical use:</p>
+<ul>
+<li>diagnose wrong camera mapping when two devices have the same friendly name</li>
+</ul>
+<p><strong>ex:</strong> <code>LIST_DEVICES</code></p>
+<h4 id="get_camera_config"><code>GET_CAMERA_CONFIG</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>retrieve current config for one logical camera slot</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>query = &quot;GET_CAMERA_CONFIG&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li>same camera status/config fields returned by the runtime session</li>
+</ul>
+<p><strong>ex:</strong> <code>GET_CAMERA_CONFIG cam0</code></p>
+<h4 id="get_record_state"><code>GET_RECORD_STATE</code></h4>
+<p>Purpose:</p>
+<ul>
+<li>retrieve recording state for one logical camera slot</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>query = &quot;GET_RECORD_STATE&quot;</code></li>
+<li><code>camera_id = &quot;cam0&quot;</code> or another logical slot</li>
+</ul>
+<p>Successful payload:</p>
+<ul>
+<li><code>camera_id</code></li>
+<li><code>recording</code></li>
+</ul>
+<p><strong>ex:</strong> <code>GET_RECORD_STATE cam0</code></p>
+<h2 id="current-known-issues">Current Known Issues</h2>
+<p>Current known limitations from field testing:</p>
+<ul>
+<li>two cameras of the same model may still expose unstable stream behavior through OpenCV and Windows backend combinations</li>
+<li><code>cam1</code> may fail under <code>CAP_MSMF</code>; runtime now rotates backends after read failures</li>
+<li>cameras connected through the same USB hub may interfere with each other</li>
+<li>two same-model cameras can be different physical devices even when <code>friendly_name</code> is identical; use <code>list_devices</code> and compare <code>device_id</code> / <code>pnp_device_id</code></li>
+<li><code>close camX</code> used to be crash-prone; shutdown path was hardened so capture is released before window destruction</li>
+</ul>
+<h2 id="operator-guidance-for-debugging">Operator Guidance for Debugging</h2>
+<p>Recommended debugging order:</p>
+<ol>
+<li>Start <code>SEE_1.0</code></li>
+<li>Run <code>list_devices</code></li>
+<li>Confirm <code>assigned_camera_id</code> and <code>opened_camera_id</code></li>
+<li>If camera views look wrong, test <code>swap cam0 cam1</code></li>
+<li>If stream instability continues, move cameras to different USB root ports instead of the same hub</li>
+</ol>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>snapshot and preview continue working when SEE is offline</li>
+<li>logical-slot workflow is now the primary workflow; avoid the older <code>device_index</code> mental model in day-to-day operation</li>
+</ul>
+<h2 id="important-reminder">Important Reminder</h2>
+<blockquote>
+<ol>
+<li><strong>When two camera USB connections are placed on the same USB-HUB, black screen, stutter, frame drops, or stream-read failures are more likely to occur.</strong></li>
+<li><strong>Do not place camera USB connections and the SuperCarrier USB connection on the same USB-HUB.</strong></li>
+</ol>
+</blockquote>
+
+            
+            
+        </body>
+        </html>

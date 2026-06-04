@@ -1,0 +1,104 @@
+{
+  "aliases": {
+    "cam0": {
+      "preferred_name_keywords": ["logitech", "usb", "webcam", "hd pro"],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam1": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam2": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam3": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam4": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam5": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam6": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam7": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam8": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    },
+    "cam9": {
+      "preferred_name_keywords": [],
+      "device_index": null,
+      "binding_key": "",
+      "friendly_name": "",
+      "device_id": "",
+      "pnp_device_id": "",
+      "location_information": "",
+      "manufacturer": ""
+    }
+  }
+}

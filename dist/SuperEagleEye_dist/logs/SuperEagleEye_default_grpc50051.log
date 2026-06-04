@@ -1,0 +1,904 @@
+2026-05-21 17:20:01,679 [INFO] logging_initialized path=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\logs\SuperEagleEye_default_grpc50051.log
+2026-05-21 17:20:01,690 [INFO] runtime_version runtime_name=SEE_1.0 version=1.2.0 min_see_version=1.0.0 min_supercarter_version=1.0.0
+2026-05-21 17:20:01,691 [INFO] runtime_title instance=default grpc_port=50051 device_indexes=all save_path=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos
+2026-05-21 17:20:01,691 [INFO] runtime_startup output_dir=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos grpc_port=50051 instance_id=default
+2026-05-21 17:20:03,838 [INFO] windows_device_query_devices devices=[{'friendly_name': 'Microsoft LifeCam Cinema', 'device_id': 'USB\\VID_045E&PID_0812&MI_00\\8&6D3FE19&0&0000', 'pnp_device_id': 'USB\\VID_045E&PID_0812&MI_00\\8&6D3FE19&0&0000', 'location_information': '', 'manufacturer': 'Microsoft'}]
+2026-05-21 17:20:03,838 [INFO] windows_device_query_success count=1
+2026-05-21 17:20:04,456 [WARNING] camera_probe_unopened index=1
+2026-05-21 17:20:04,549 [WARNING] camera_probe_unopened index=2
+2026-05-21 17:20:08,487 [WARNING] camera_probe_unopened index=1
+2026-05-21 17:20:08,578 [WARNING] camera_probe_unopened index=2
+2026-05-21 17:20:08,578 [INFO] camera_discovery_refresh windows_devices=1 descriptors=1 changed=False
+2026-05-21 17:20:08,580 [INFO] camera_alias_config_saved aliases_changed=True
+2026-05-21 17:20:08,580 [INFO] camera_manager_open_defaults changed=False
+2026-05-21 17:20:08,580 [INFO] camera_default_open camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema
+2026-05-21 17:20:08,581 [INFO] camera_preview_thread_start camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema
+2026-05-21 17:20:08,581 [INFO] camera_session_start camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema connected=True
+2026-05-21 17:20:08,581 [INFO] camera_session_created camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema
+2026-05-21 17:20:08,582 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:20:08,715 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:20:08,716 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:20:08,716 [INFO] camera_open_completed camera_id=cam0 wait_initial=True
+2026-05-21 17:20:08,717 [INFO] camera_hotplug_monitor_started
+2026-05-21 17:20:08,718 [INFO] camera_manager_initialized output_dir=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos allowed_device_indexes=all discovered_devices=1
+2026-05-21 17:20:08,719 [INFO] command_router_initialized output_dir=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos
+2026-05-21 17:20:08,737 [INFO] grpc_service_initialized
+2026-05-21 17:20:08,741 [INFO] grpc_server_listening port=50051
+2026-05-21 17:20:08,742 [INFO] SuperEagleEye interactive terminal ready. Type help for commands.
+2026-05-21 17:20:08,742 [INFO] SEE> 
+2026-05-21 17:20:31,107 [WARNING] camera_force_reopen camera_id=cam0 device_index=0 connected=True
+2026-05-21 17:20:31,107 [WARNING] camera_backend_global_failover current_index=0 next_index=1 session_count=1
+2026-05-21 17:20:31,107 [WARNING] camera_backend_failover camera_id=cam0 next_backend=CAP_DSHOW
+2026-05-21 17:20:31,608 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_DSHOW
+2026-05-21 17:20:31,611 [WARNING] camera_open_failed camera_id=cam0 device_index=0 backend=CAP_DSHOW
+2026-05-21 17:20:31,611 [ERROR] camera_open_exhausted camera_id=cam0 device_index=0
+2026-05-21 17:20:31,611 [WARNING] camera_open_retry camera_id=cam0 device_index=0 attempt=1 max_attempts=5
+2026-05-21 17:20:32,612 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_DSHOW
+2026-05-21 17:20:32,619 [WARNING] camera_open_failed camera_id=cam0 device_index=0 backend=CAP_DSHOW
+2026-05-21 17:20:32,620 [ERROR] camera_open_exhausted camera_id=cam0 device_index=0
+2026-05-21 17:20:32,620 [WARNING] camera_open_retry camera_id=cam0 device_index=0 attempt=2 max_attempts=5
+2026-05-21 17:20:33,621 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_DSHOW
+2026-05-21 17:20:34,709 [WARNING] windows_device_query_failed returncode=3221225786 stderr=
+2026-05-21 17:20:34,710 [WARNING] camera_hotplug_query_debounced fail_count=1 threshold=3
+2026-05-21 17:21:15,705 [INFO] logging_initialized path=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\logs\SuperEagleEye_default_grpc50051.log
+2026-05-21 17:21:15,709 [INFO] runtime_version runtime_name=SEE_1.0 version=1.2.0 min_see_version=1.0.0 min_supercarter_version=1.0.0
+2026-05-21 17:21:15,710 [INFO] runtime_title instance=default grpc_port=50051 device_indexes=all save_path=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos
+2026-05-21 17:21:15,710 [INFO] runtime_startup output_dir=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos grpc_port=50051 instance_id=default
+2026-05-21 17:21:17,725 [INFO] windows_device_query_devices devices=[{'friendly_name': 'Microsoft LifeCam Cinema', 'device_id': 'USB\\VID_045E&PID_0812&MI_00\\8&2FB5177B&1&0000', 'pnp_device_id': 'USB\\VID_045E&PID_0812&MI_00\\8&2FB5177B&1&0000', 'location_information': '', 'manufacturer': 'Microsoft'}]
+2026-05-21 17:21:17,726 [INFO] windows_device_query_success count=1
+2026-05-21 17:21:18,096 [WARNING] camera_probe_unopened index=1
+2026-05-21 17:21:18,209 [WARNING] camera_probe_unopened index=2
+2026-05-21 17:21:22,170 [WARNING] camera_probe_unopened index=1
+2026-05-21 17:21:22,273 [WARNING] camera_probe_unopened index=2
+2026-05-21 17:21:22,273 [INFO] camera_discovery_refresh windows_devices=1 descriptors=1 changed=False
+2026-05-21 17:21:22,274 [INFO] camera_alias_config_saved aliases_changed=True
+2026-05-21 17:21:22,275 [INFO] camera_manager_open_defaults changed=False
+2026-05-21 17:21:22,275 [INFO] camera_default_open camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema
+2026-05-21 17:21:22,275 [INFO] camera_preview_thread_start camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema
+2026-05-21 17:21:22,275 [INFO] camera_session_start camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema connected=True
+2026-05-21 17:21:22,277 [INFO] camera_session_created camera_id=cam0 device_index=0 friendly_name=Microsoft LifeCam Cinema
+2026-05-21 17:21:22,277 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:21:22,426 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:21:22,426 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:21:22,427 [INFO] camera_open_completed camera_id=cam0 wait_initial=True
+2026-05-21 17:21:22,428 [INFO] camera_hotplug_monitor_started
+2026-05-21 17:21:22,428 [INFO] camera_manager_initialized output_dir=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos allowed_device_indexes=all discovered_devices=1
+2026-05-21 17:21:22,429 [INFO] command_router_initialized output_dir=D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\camera_v2\dist\SuperEagleEye_dist\videos
+2026-05-21 17:21:22,442 [INFO] grpc_service_initialized
+2026-05-21 17:21:22,454 [INFO] grpc_server_listening port=50051
+2026-05-21 17:21:22,454 [INFO] SuperEagleEye interactive terminal ready. Type help for commands.
+2026-05-21 17:21:22,455 [INFO] SEE> 
+2026-05-21 17:21:50,693 [INFO] SEE> 
+2026-05-21 17:21:50,840 [INFO] SEE> 
+2026-05-21 17:21:51,022 [INFO] SEE> 
+2026-05-21 17:21:59,873 [INFO] command_execute_requested source=cli command=OPEN_CAMERA_PANEL camera_id=cam0 args={}
+2026-05-21 17:21:59,874 [INFO] camera_controls_open_requested camera_id=cam0
+2026-05-21 17:21:59,874 [INFO] command_execute_completed command=OPEN_CAMERA_PANEL camera_id=cam0 code=OK
+2026-05-21 17:21:59,874 [INFO] ack: C3 0D 0A
+2026-05-21 17:21:59,874 [INFO] {
+2026-05-21 17:21:59,875 [INFO]   "camera_id": "cam0",
+2026-05-21 17:21:59,875 [INFO]   "controls_panel_open": true,
+2026-05-21 17:21:59,875 [INFO]   "window_name": "SuperEagleEye::cam0 [instance=default grpc_port=50051 device_indexes=all save_path=D:\\YQHubRepo\\Tool-SuperCarter\\SuperCarter\\SuperCarter\\Camera\\camera_v2\\dist\\SuperEagleEye_dist\\videos]::controls",
+2026-05-21 17:21:59,875 [INFO]   "message": "controls panel will open on the camera preview thread",
+2026-05-21 17:21:59,875 [INFO]   "properties": {
+2026-05-21 17:21:59,875 [INFO]     "brightness": 50,
+2026-05-21 17:21:59,875 [INFO]     "focus": 0
+2026-05-21 17:21:59,876 [INFO]   }
+2026-05-21 17:21:59,876 [INFO] }
+2026-05-21 17:21:59,876 [INFO] SEE> 
+2026-05-21 17:22:00,136 [INFO] camera_controls_initialized camera_id=cam0
+2026-05-21 17:22:03,870 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=50 new_raw=30
+2026-05-21 17:22:03,875 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=30 value=0.3 applied=True reported=133.0
+2026-05-21 17:22:04,270 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=30 new_raw=10
+2026-05-21 17:22:04,271 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=10 value=0.1 applied=True reported=133.0
+2026-05-21 17:22:04,526 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=10 new_raw=30
+2026-05-21 17:22:04,527 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=30 value=0.3 applied=True reported=133.0
+2026-05-21 17:22:04,782 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=30 new_raw=10
+2026-05-21 17:22:04,783 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=10 value=0.1 applied=True reported=133.0
+2026-05-21 17:22:05,021 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=10 new_raw=30
+2026-05-21 17:22:05,022 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=30 value=0.3 applied=True reported=133.0
+2026-05-21 17:22:05,230 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=30 new_raw=10
+2026-05-21 17:22:05,231 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=10 value=0.1 applied=True reported=133.0
+2026-05-21 17:22:06,175 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=10 new_raw=0
+2026-05-21 17:22:06,176 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=0 value=0.0 applied=True reported=133.0
+2026-05-21 17:22:06,382 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=0 new_raw=20
+2026-05-21 17:22:06,384 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=20 value=0.2 applied=True reported=133.0
+2026-05-21 17:22:07,374 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=20 new_raw=40
+2026-05-21 17:22:07,375 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=40 value=0.4 applied=True reported=133.0
+2026-05-21 17:22:07,582 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=40 new_raw=20
+2026-05-21 17:22:07,583 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=20 value=0.2 applied=True reported=133.0
+2026-05-21 17:22:07,822 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=20 new_raw=40
+2026-05-21 17:22:07,824 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=40 value=0.4 applied=True reported=133.0
+2026-05-21 17:22:08,078 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=40 new_raw=60
+2026-05-21 17:22:08,079 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=60 value=0.6 applied=True reported=133.0
+2026-05-21 17:22:08,718 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=60 new_raw=40
+2026-05-21 17:22:08,719 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=40 value=0.4 applied=True reported=133.0
+2026-05-21 17:22:09,678 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=40 new_raw=60
+2026-05-21 17:22:09,679 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=60 value=0.6 applied=True reported=133.0
+2026-05-21 17:22:10,782 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=0 new_raw=51
+2026-05-21 17:22:10,787 [INFO] camera_property_apply camera_id=cam0 name=focus raw=51 value=51.0 applied=False reported=0.0
+2026-05-21 17:22:12,381 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=51 new_raw=55
+2026-05-21 17:22:12,383 [INFO] camera_property_apply camera_id=cam0 name=focus raw=55 value=55.0 applied=False reported=0.0
+2026-05-21 17:22:12,430 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=55 new_raw=86
+2026-05-21 17:22:12,432 [INFO] camera_property_apply camera_id=cam0 name=focus raw=86 value=86.0 applied=False reported=0.0
+2026-05-21 17:22:12,478 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=86 new_raw=97
+2026-05-21 17:22:12,480 [INFO] camera_property_apply camera_id=cam0 name=focus raw=97 value=97.0 applied=False reported=0.0
+2026-05-21 17:22:12,526 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=97 new_raw=106
+2026-05-21 17:22:12,528 [INFO] camera_property_apply camera_id=cam0 name=focus raw=106 value=106.0 applied=False reported=0.0
+2026-05-21 17:22:12,573 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=106 new_raw=120
+2026-05-21 17:22:12,575 [INFO] camera_property_apply camera_id=cam0 name=focus raw=120 value=120.0 applied=False reported=0.0
+2026-05-21 17:22:12,622 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=120 new_raw=127
+2026-05-21 17:22:12,624 [INFO] camera_property_apply camera_id=cam0 name=focus raw=127 value=127.0 applied=False reported=0.0
+2026-05-21 17:22:12,670 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=127 new_raw=135
+2026-05-21 17:22:12,671 [INFO] camera_property_apply camera_id=cam0 name=focus raw=135 value=135.0 applied=False reported=0.0
+2026-05-21 17:22:12,718 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=135 new_raw=142
+2026-05-21 17:22:12,720 [INFO] camera_property_apply camera_id=cam0 name=focus raw=142 value=142.0 applied=False reported=0.0
+2026-05-21 17:22:12,782 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=142 new_raw=154
+2026-05-21 17:22:12,784 [INFO] camera_property_apply camera_id=cam0 name=focus raw=154 value=154.0 applied=False reported=0.0
+2026-05-21 17:22:12,830 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=154 new_raw=164
+2026-05-21 17:22:12,832 [INFO] camera_property_apply camera_id=cam0 name=focus raw=164 value=164.0 applied=False reported=0.0
+2026-05-21 17:22:12,878 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=164 new_raw=166
+2026-05-21 17:22:12,880 [INFO] camera_property_apply camera_id=cam0 name=focus raw=166 value=166.0 applied=False reported=0.0
+2026-05-21 17:22:12,926 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=166 new_raw=170
+2026-05-21 17:22:12,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=170 value=170.0 applied=False reported=0.0
+2026-05-21 17:22:12,974 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=170 new_raw=171
+2026-05-21 17:22:12,976 [INFO] camera_property_apply camera_id=cam0 name=focus raw=171 value=171.0 applied=False reported=0.0
+2026-05-21 17:22:13,021 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=171 new_raw=179
+2026-05-21 17:22:13,023 [INFO] camera_property_apply camera_id=cam0 name=focus raw=179 value=179.0 applied=False reported=0.0
+2026-05-21 17:22:13,070 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=179 new_raw=197
+2026-05-21 17:22:13,072 [INFO] camera_property_apply camera_id=cam0 name=focus raw=197 value=197.0 applied=False reported=0.0
+2026-05-21 17:22:13,119 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=197 new_raw=223
+2026-05-21 17:22:13,122 [INFO] camera_property_apply camera_id=cam0 name=focus raw=223 value=223.0 applied=False reported=0.0
+2026-05-21 17:22:13,182 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=223 new_raw=233
+2026-05-21 17:22:13,184 [INFO] camera_property_apply camera_id=cam0 name=focus raw=233 value=233.0 applied=False reported=0.0
+2026-05-21 17:22:13,230 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=233 new_raw=236
+2026-05-21 17:22:13,233 [INFO] camera_property_apply camera_id=cam0 name=focus raw=236 value=236.0 applied=False reported=0.0
+2026-05-21 17:22:21,821 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=236 new_raw=185
+2026-05-21 17:22:21,823 [INFO] camera_property_apply camera_id=cam0 name=focus raw=185 value=185.0 applied=False reported=0.0
+2026-05-21 17:22:23,118 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=185 new_raw=134
+2026-05-21 17:22:23,120 [INFO] camera_property_apply camera_id=cam0 name=focus raw=134 value=134.0 applied=False reported=0.0
+2026-05-21 17:22:23,182 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=134 new_raw=83
+2026-05-21 17:22:23,185 [INFO] camera_property_apply camera_id=cam0 name=focus raw=83 value=83.0 applied=False reported=0.0
+2026-05-21 17:22:23,326 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=83 new_raw=32
+2026-05-21 17:22:23,397 [INFO] camera_property_apply camera_id=cam0 name=focus raw=32 value=32.0 applied=True reported=0.0
+2026-05-21 17:22:23,518 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=32 new_raw=83
+2026-05-21 17:22:23,520 [INFO] camera_property_apply camera_id=cam0 name=focus raw=83 value=83.0 applied=False reported=0.0
+2026-05-21 17:22:23,725 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=83 new_raw=32
+2026-05-21 17:22:23,729 [INFO] camera_property_apply camera_id=cam0 name=focus raw=32 value=32.0 applied=True reported=0.0
+2026-05-21 17:22:29,118 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=32 new_raw=83
+2026-05-21 17:22:29,119 [INFO] camera_property_apply camera_id=cam0 name=focus raw=83 value=83.0 applied=False reported=0.0
+2026-05-21 17:22:29,582 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=83 new_raw=134
+2026-05-21 17:22:29,584 [INFO] camera_property_apply camera_id=cam0 name=focus raw=134 value=134.0 applied=False reported=0.0
+2026-05-21 17:22:29,917 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=134 new_raw=83
+2026-05-21 17:22:29,919 [INFO] camera_property_apply camera_id=cam0 name=focus raw=83 value=83.0 applied=False reported=0.0
+2026-05-21 17:22:30,269 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=83 new_raw=134
+2026-05-21 17:22:30,271 [INFO] camera_property_apply camera_id=cam0 name=focus raw=134 value=134.0 applied=False reported=0.0
+2026-05-21 17:22:30,669 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=134 new_raw=185
+2026-05-21 17:22:30,671 [INFO] camera_property_apply camera_id=cam0 name=focus raw=185 value=185.0 applied=False reported=0.0
+2026-05-21 17:22:32,126 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=185 new_raw=236
+2026-05-21 17:22:32,128 [INFO] camera_property_apply camera_id=cam0 name=focus raw=236 value=236.0 applied=False reported=0.0
+2026-05-21 17:22:32,831 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=236 new_raw=185
+2026-05-21 17:22:32,834 [INFO] camera_property_apply camera_id=cam0 name=focus raw=185 value=185.0 applied=False reported=0.0
+2026-05-21 17:22:36,877 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=185 new_raw=134
+2026-05-21 17:22:36,879 [INFO] camera_property_apply camera_id=cam0 name=focus raw=134 value=134.0 applied=False reported=0.0
+2026-05-21 17:22:38,877 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=134 new_raw=185
+2026-05-21 17:22:38,879 [INFO] camera_property_apply camera_id=cam0 name=focus raw=185 value=185.0 applied=False reported=0.0
+2026-05-21 17:22:39,069 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=185 new_raw=236
+2026-05-21 17:22:39,071 [INFO] camera_property_apply camera_id=cam0 name=focus raw=236 value=236.0 applied=False reported=0.0
+2026-05-21 17:22:39,278 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=236 new_raw=185
+2026-05-21 17:22:39,280 [INFO] camera_property_apply camera_id=cam0 name=focus raw=185 value=185.0 applied=False reported=0.0
+2026-05-21 17:22:39,726 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=185 new_raw=236
+2026-05-21 17:22:39,728 [INFO] camera_property_apply camera_id=cam0 name=focus raw=236 value=236.0 applied=False reported=0.0
+2026-05-21 17:22:39,982 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=236 new_raw=185
+2026-05-21 17:22:39,983 [INFO] camera_property_apply camera_id=cam0 name=focus raw=185 value=185.0 applied=False reported=0.0
+2026-05-21 17:22:40,174 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=185 new_raw=236
+2026-05-21 17:22:40,176 [INFO] camera_property_apply camera_id=cam0 name=focus raw=236 value=236.0 applied=False reported=0.0
+2026-05-21 17:22:40,479 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=236 new_raw=237
+2026-05-21 17:22:40,481 [INFO] camera_property_apply camera_id=cam0 name=focus raw=237 value=237.0 applied=False reported=0.0
+2026-05-21 17:22:40,670 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=237 new_raw=255
+2026-05-21 17:22:40,672 [INFO] camera_property_apply camera_id=cam0 name=focus raw=255 value=255.0 applied=False reported=0.0
+2026-05-21 17:22:40,926 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=255 new_raw=204
+2026-05-21 17:22:40,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=204 value=204.0 applied=False reported=0.0
+2026-05-21 17:22:41,582 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=204 new_raw=255
+2026-05-21 17:22:41,584 [INFO] camera_property_apply camera_id=cam0 name=focus raw=255 value=255.0 applied=False reported=0.0
+2026-05-21 17:22:46,029 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=255 new_raw=204
+2026-05-21 17:22:46,031 [INFO] camera_property_apply camera_id=cam0 name=focus raw=204 value=204.0 applied=False reported=0.0
+2026-05-21 17:22:47,469 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=204 new_raw=153
+2026-05-21 17:22:47,472 [INFO] camera_property_apply camera_id=cam0 name=focus raw=153 value=153.0 applied=False reported=0.0
+2026-05-21 17:22:47,981 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=153 new_raw=204
+2026-05-21 17:22:47,982 [INFO] camera_property_apply camera_id=cam0 name=focus raw=204 value=204.0 applied=False reported=0.0
+2026-05-21 17:22:48,430 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=204 new_raw=153
+2026-05-21 17:22:48,432 [INFO] camera_property_apply camera_id=cam0 name=focus raw=153 value=153.0 applied=False reported=0.0
+2026-05-21 17:22:49,422 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=153 new_raw=154
+2026-05-21 17:22:49,425 [INFO] camera_property_apply camera_id=cam0 name=focus raw=154 value=154.0 applied=False reported=0.0
+2026-05-21 17:22:49,533 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=154 new_raw=156
+2026-05-21 17:22:49,535 [INFO] camera_property_apply camera_id=cam0 name=focus raw=156 value=156.0 applied=False reported=0.0
+2026-05-21 17:22:49,582 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=156 new_raw=157
+2026-05-21 17:22:49,584 [INFO] camera_property_apply camera_id=cam0 name=focus raw=157 value=157.0 applied=False reported=0.0
+2026-05-21 17:22:49,630 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=157 new_raw=158
+2026-05-21 17:22:49,632 [INFO] camera_property_apply camera_id=cam0 name=focus raw=158 value=158.0 applied=False reported=0.0
+2026-05-21 17:22:49,726 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=158 new_raw=159
+2026-05-21 17:22:49,728 [INFO] camera_property_apply camera_id=cam0 name=focus raw=159 value=159.0 applied=False reported=0.0
+2026-05-21 17:22:49,821 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=159 new_raw=160
+2026-05-21 17:22:49,823 [INFO] camera_property_apply camera_id=cam0 name=focus raw=160 value=160.0 applied=False reported=0.0
+2026-05-21 17:22:50,029 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=160 new_raw=161
+2026-05-21 17:22:50,031 [INFO] camera_property_apply camera_id=cam0 name=focus raw=161 value=161.0 applied=False reported=0.0
+2026-05-21 17:22:50,125 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=161 new_raw=162
+2026-05-21 17:22:50,127 [INFO] camera_property_apply camera_id=cam0 name=focus raw=162 value=162.0 applied=False reported=0.0
+2026-05-21 17:22:50,174 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=162 new_raw=163
+2026-05-21 17:22:50,176 [INFO] camera_property_apply camera_id=cam0 name=focus raw=163 value=163.0 applied=False reported=0.0
+2026-05-21 17:22:50,222 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=163 new_raw=165
+2026-05-21 17:22:50,224 [INFO] camera_property_apply camera_id=cam0 name=focus raw=165 value=165.0 applied=False reported=0.0
+2026-05-21 17:22:50,270 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=165 new_raw=166
+2026-05-21 17:22:50,272 [INFO] camera_property_apply camera_id=cam0 name=focus raw=166 value=166.0 applied=False reported=0.0
+2026-05-21 17:22:50,430 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=166 new_raw=167
+2026-05-21 17:22:50,432 [INFO] camera_property_apply camera_id=cam0 name=focus raw=167 value=167.0 applied=False reported=0.0
+2026-05-21 17:22:50,477 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=167 new_raw=168
+2026-05-21 17:22:50,478 [INFO] camera_property_apply camera_id=cam0 name=focus raw=168 value=168.0 applied=False reported=0.0
+2026-05-21 17:22:50,524 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=168 new_raw=169
+2026-05-21 17:22:50,526 [INFO] camera_property_apply camera_id=cam0 name=focus raw=169 value=169.0 applied=False reported=0.0
+2026-05-21 17:22:50,573 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=169 new_raw=172
+2026-05-21 17:22:50,575 [INFO] camera_property_apply camera_id=cam0 name=focus raw=172 value=172.0 applied=False reported=0.0
+2026-05-21 17:22:52,269 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=172 new_raw=178
+2026-05-21 17:22:52,271 [INFO] camera_property_apply camera_id=cam0 name=focus raw=178 value=178.0 applied=False reported=0.0
+2026-05-21 17:22:52,333 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=178 new_raw=181
+2026-05-21 17:22:52,336 [INFO] camera_property_apply camera_id=cam0 name=focus raw=181 value=181.0 applied=False reported=0.0
+2026-05-21 17:22:52,381 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=181 new_raw=183
+2026-05-21 17:22:52,383 [INFO] camera_property_apply camera_id=cam0 name=focus raw=183 value=183.0 applied=False reported=0.0
+2026-05-21 17:22:52,526 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=183 new_raw=184
+2026-05-21 17:22:52,528 [INFO] camera_property_apply camera_id=cam0 name=focus raw=184 value=184.0 applied=False reported=0.0
+2026-05-21 17:22:52,878 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=184 new_raw=185
+2026-05-21 17:22:52,881 [INFO] camera_property_apply camera_id=cam0 name=focus raw=185 value=185.0 applied=False reported=0.0
+2026-05-21 17:22:52,926 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=185 new_raw=188
+2026-05-21 17:22:52,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=188 value=188.0 applied=False reported=0.0
+2026-05-21 17:22:52,973 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=188 new_raw=191
+2026-05-21 17:22:52,975 [INFO] camera_property_apply camera_id=cam0 name=focus raw=191 value=191.0 applied=False reported=0.0
+2026-05-21 17:22:53,070 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=191 new_raw=192
+2026-05-21 17:22:53,072 [INFO] camera_property_apply camera_id=cam0 name=focus raw=192 value=192.0 applied=False reported=0.0
+2026-05-21 17:22:53,134 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=192 new_raw=197
+2026-05-21 17:22:53,136 [INFO] camera_property_apply camera_id=cam0 name=focus raw=197 value=197.0 applied=False reported=0.0
+2026-05-21 17:22:53,182 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=197 new_raw=201
+2026-05-21 17:22:53,185 [INFO] camera_property_apply camera_id=cam0 name=focus raw=201 value=201.0 applied=False reported=0.0
+2026-05-21 17:22:53,372 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=201 new_raw=202
+2026-05-21 17:22:53,374 [INFO] camera_property_apply camera_id=cam0 name=focus raw=202 value=202.0 applied=False reported=0.0
+2026-05-21 17:22:53,422 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=202 new_raw=203
+2026-05-21 17:22:53,425 [INFO] camera_property_apply camera_id=cam0 name=focus raw=203 value=203.0 applied=False reported=0.0
+2026-05-21 17:22:54,735 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=203 new_raw=206
+2026-05-21 17:22:54,737 [INFO] camera_property_apply camera_id=cam0 name=focus raw=206 value=206.0 applied=False reported=0.0
+2026-05-21 17:22:54,782 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=206 new_raw=213
+2026-05-21 17:22:54,783 [INFO] camera_property_apply camera_id=cam0 name=focus raw=213 value=213.0 applied=False reported=0.0
+2026-05-21 17:22:54,878 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=213 new_raw=215
+2026-05-21 17:22:54,880 [INFO] camera_property_apply camera_id=cam0 name=focus raw=215 value=215.0 applied=False reported=0.0
+2026-05-21 17:22:54,926 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=215 new_raw=219
+2026-05-21 17:22:54,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=219 value=219.0 applied=False reported=0.0
+2026-05-21 17:22:54,974 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=219 new_raw=221
+2026-05-21 17:22:54,976 [INFO] camera_property_apply camera_id=cam0 name=focus raw=221 value=221.0 applied=False reported=0.0
+2026-05-21 17:22:55,021 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=221 new_raw=222
+2026-05-21 17:22:55,023 [INFO] camera_property_apply camera_id=cam0 name=focus raw=222 value=222.0 applied=False reported=0.0
+2026-05-21 17:22:55,133 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=222 new_raw=223
+2026-05-21 17:22:55,135 [INFO] camera_property_apply camera_id=cam0 name=focus raw=223 value=223.0 applied=False reported=0.0
+2026-05-21 17:22:55,182 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=223 new_raw=226
+2026-05-21 17:22:55,184 [INFO] camera_property_apply camera_id=cam0 name=focus raw=226 value=226.0 applied=False reported=0.0
+2026-05-21 17:22:55,230 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=226 new_raw=229
+2026-05-21 17:22:55,232 [INFO] camera_property_apply camera_id=cam0 name=focus raw=229 value=229.0 applied=False reported=0.0
+2026-05-21 17:22:55,278 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=229 new_raw=230
+2026-05-21 17:22:55,280 [INFO] camera_property_apply camera_id=cam0 name=focus raw=230 value=230.0 applied=False reported=0.0
+2026-05-21 17:22:56,334 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=230 new_raw=179
+2026-05-21 17:22:56,337 [INFO] camera_property_apply camera_id=cam0 name=focus raw=179 value=179.0 applied=False reported=0.0
+2026-05-21 17:22:56,383 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=179 new_raw=128
+2026-05-21 17:22:56,385 [INFO] camera_property_apply camera_id=cam0 name=focus raw=128 value=128.0 applied=False reported=0.0
+2026-05-21 17:22:56,734 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=128 new_raw=77
+2026-05-21 17:22:56,736 [INFO] camera_property_apply camera_id=cam0 name=focus raw=77 value=77.0 applied=False reported=0.0
+2026-05-21 17:22:58,270 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=77 new_raw=26
+2026-05-21 17:22:58,288 [INFO] camera_property_apply camera_id=cam0 name=focus raw=26 value=26.0 applied=True reported=0.0
+2026-05-21 17:22:59,982 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=26 new_raw=0
+2026-05-21 17:23:00,048 [INFO] camera_property_apply camera_id=cam0 name=focus raw=0 value=0.0 applied=True reported=0.0
+2026-05-21 17:23:13,070 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=0 new_raw=51
+2026-05-21 17:23:13,072 [INFO] camera_property_apply camera_id=cam0 name=focus raw=51 value=51.0 applied=False reported=0.0
+2026-05-21 17:23:13,581 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=51 new_raw=102
+2026-05-21 17:23:13,583 [INFO] camera_property_apply camera_id=cam0 name=focus raw=102 value=102.0 applied=False reported=0.0
+2026-05-21 17:23:14,078 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=102 new_raw=51
+2026-05-21 17:23:14,079 [INFO] camera_property_apply camera_id=cam0 name=focus raw=51 value=51.0 applied=False reported=0.0
+2026-05-21 17:23:14,525 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=51 new_raw=102
+2026-05-21 17:23:14,528 [INFO] camera_property_apply camera_id=cam0 name=focus raw=102 value=102.0 applied=False reported=0.0
+2026-05-21 17:23:14,974 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=102 new_raw=153
+2026-05-21 17:23:14,976 [INFO] camera_property_apply camera_id=cam0 name=focus raw=153 value=153.0 applied=False reported=0.0
+2026-05-21 17:23:15,822 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=153 new_raw=204
+2026-05-21 17:23:15,824 [INFO] camera_property_apply camera_id=cam0 name=focus raw=204 value=204.0 applied=False reported=0.0
+2026-05-21 17:23:18,974 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=204 new_raw=255
+2026-05-21 17:23:18,977 [INFO] camera_property_apply camera_id=cam0 name=focus raw=255 value=255.0 applied=False reported=0.0
+2026-05-21 17:23:19,422 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=255 new_raw=204
+2026-05-21 17:23:19,425 [INFO] camera_property_apply camera_id=cam0 name=focus raw=204 value=204.0 applied=False reported=0.0
+2026-05-21 17:23:20,734 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=204 new_raw=205
+2026-05-21 17:23:20,735 [INFO] camera_property_apply camera_id=cam0 name=focus raw=205 value=205.0 applied=False reported=0.0
+2026-05-21 17:23:20,782 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=205 new_raw=206
+2026-05-21 17:23:20,785 [INFO] camera_property_apply camera_id=cam0 name=focus raw=206 value=206.0 applied=False reported=0.0
+2026-05-21 17:23:20,878 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=206 new_raw=207
+2026-05-21 17:23:20,880 [INFO] camera_property_apply camera_id=cam0 name=focus raw=207 value=207.0 applied=False reported=0.0
+2026-05-21 17:23:20,926 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=207 new_raw=209
+2026-05-21 17:23:20,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=209 value=209.0 applied=False reported=0.0
+2026-05-21 17:23:20,973 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=209 new_raw=210
+2026-05-21 17:23:20,975 [INFO] camera_property_apply camera_id=cam0 name=focus raw=210 value=210.0 applied=False reported=0.0
+2026-05-21 17:23:21,021 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=210 new_raw=211
+2026-05-21 17:23:21,023 [INFO] camera_property_apply camera_id=cam0 name=focus raw=211 value=211.0 applied=False reported=0.0
+2026-05-21 17:23:21,229 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=211 new_raw=212
+2026-05-21 17:23:21,231 [INFO] camera_property_apply camera_id=cam0 name=focus raw=212 value=212.0 applied=False reported=0.0
+2026-05-21 17:23:23,022 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=212 new_raw=210
+2026-05-21 17:23:23,025 [INFO] camera_property_apply camera_id=cam0 name=focus raw=210 value=210.0 applied=False reported=0.0
+2026-05-21 17:23:23,086 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=210 new_raw=208
+2026-05-21 17:23:23,088 [INFO] camera_property_apply camera_id=cam0 name=focus raw=208 value=208.0 applied=False reported=0.0
+2026-05-21 17:23:23,135 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=208 new_raw=207
+2026-05-21 17:23:23,137 [INFO] camera_property_apply camera_id=cam0 name=focus raw=207 value=207.0 applied=False reported=0.0
+2026-05-21 17:23:23,182 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=207 new_raw=204
+2026-05-21 17:23:23,184 [INFO] camera_property_apply camera_id=cam0 name=focus raw=204 value=204.0 applied=False reported=0.0
+2026-05-21 17:23:23,231 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=204 new_raw=196
+2026-05-21 17:23:23,233 [INFO] camera_property_apply camera_id=cam0 name=focus raw=196 value=196.0 applied=False reported=0.0
+2026-05-21 17:23:23,278 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=196 new_raw=180
+2026-05-21 17:23:23,279 [INFO] camera_property_apply camera_id=cam0 name=focus raw=180 value=180.0 applied=False reported=0.0
+2026-05-21 17:23:23,325 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=180 new_raw=176
+2026-05-21 17:23:23,327 [INFO] camera_property_apply camera_id=cam0 name=focus raw=176 value=176.0 applied=False reported=0.0
+2026-05-21 17:23:23,533 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=176 new_raw=153
+2026-05-21 17:23:23,535 [INFO] camera_property_apply camera_id=cam0 name=focus raw=153 value=153.0 applied=False reported=0.0
+2026-05-21 17:23:23,582 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=153 new_raw=141
+2026-05-21 17:23:23,584 [INFO] camera_property_apply camera_id=cam0 name=focus raw=141 value=141.0 applied=False reported=0.0
+2026-05-21 17:23:23,774 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=141 new_raw=133
+2026-05-21 17:23:23,776 [INFO] camera_property_apply camera_id=cam0 name=focus raw=133 value=133.0 applied=False reported=0.0
+2026-05-21 17:23:23,823 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=133 new_raw=108
+2026-05-21 17:23:23,825 [INFO] camera_property_apply camera_id=cam0 name=focus raw=108 value=108.0 applied=False reported=0.0
+2026-05-21 17:23:23,886 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=108 new_raw=93
+2026-05-21 17:23:23,888 [INFO] camera_property_apply camera_id=cam0 name=focus raw=93 value=93.0 applied=False reported=0.0
+2026-05-21 17:23:24,077 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=93 new_raw=92
+2026-05-21 17:23:24,078 [INFO] camera_property_apply camera_id=cam0 name=focus raw=92 value=92.0 applied=False reported=0.0
+2026-05-21 17:23:24,126 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=92 new_raw=87
+2026-05-21 17:23:24,127 [INFO] camera_property_apply camera_id=cam0 name=focus raw=87 value=87.0 applied=False reported=0.0
+2026-05-21 17:23:24,174 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=87 new_raw=27
+2026-05-21 17:23:24,241 [INFO] camera_property_apply camera_id=cam0 name=focus raw=27 value=27.0 applied=True reported=0.0
+2026-05-21 17:23:24,247 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=27 new_raw=13
+2026-05-21 17:23:24,285 [INFO] camera_property_apply camera_id=cam0 name=focus raw=13 value=13.0 applied=True reported=0.0
+2026-05-21 17:23:24,478 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=13 new_raw=9
+2026-05-21 17:23:24,490 [INFO] camera_property_apply camera_id=cam0 name=focus raw=9 value=9.0 applied=True reported=0.0
+2026-05-21 17:23:24,525 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=9 new_raw=7
+2026-05-21 17:23:24,532 [INFO] camera_property_apply camera_id=cam0 name=focus raw=7 value=7.0 applied=True reported=0.0
+2026-05-21 17:23:25,181 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=7 new_raw=8
+2026-05-21 17:23:25,186 [INFO] camera_property_apply camera_id=cam0 name=focus raw=8 value=8.0 applied=True reported=0.0
+2026-05-21 17:23:25,229 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=8 new_raw=16
+2026-05-21 17:23:25,250 [INFO] camera_property_apply camera_id=cam0 name=focus raw=16 value=16.0 applied=True reported=0.0
+2026-05-21 17:23:25,277 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=16 new_raw=48
+2026-05-21 17:23:25,279 [INFO] camera_property_apply camera_id=cam0 name=focus raw=48 value=48.0 applied=False reported=0.0
+2026-05-21 17:23:25,325 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=48 new_raw=57
+2026-05-21 17:23:25,327 [INFO] camera_property_apply camera_id=cam0 name=focus raw=57 value=57.0 applied=False reported=0.0
+2026-05-21 17:23:25,374 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=57 new_raw=61
+2026-05-21 17:23:25,376 [INFO] camera_property_apply camera_id=cam0 name=focus raw=61 value=61.0 applied=False reported=0.0
+2026-05-21 17:23:25,485 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=61 new_raw=72
+2026-05-21 17:23:25,487 [INFO] camera_property_apply camera_id=cam0 name=focus raw=72 value=72.0 applied=False reported=0.0
+2026-05-21 17:23:25,534 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=72 new_raw=113
+2026-05-21 17:23:25,536 [INFO] camera_property_apply camera_id=cam0 name=focus raw=113 value=113.0 applied=False reported=0.0
+2026-05-21 17:23:25,581 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=113 new_raw=127
+2026-05-21 17:23:25,583 [INFO] camera_property_apply camera_id=cam0 name=focus raw=127 value=127.0 applied=False reported=0.0
+2026-05-21 17:23:25,630 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=127 new_raw=130
+2026-05-21 17:23:25,631 [INFO] camera_property_apply camera_id=cam0 name=focus raw=130 value=130.0 applied=False reported=0.0
+2026-05-21 17:23:25,776 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=130 new_raw=138
+2026-05-21 17:23:25,778 [INFO] camera_property_apply camera_id=cam0 name=focus raw=138 value=138.0 applied=False reported=0.0
+2026-05-21 17:23:25,821 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=138 new_raw=161
+2026-05-21 17:23:25,823 [INFO] camera_property_apply camera_id=cam0 name=focus raw=161 value=161.0 applied=False reported=0.0
+2026-05-21 17:23:25,886 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=161 new_raw=164
+2026-05-21 17:23:25,888 [INFO] camera_property_apply camera_id=cam0 name=focus raw=164 value=164.0 applied=False reported=0.0
+2026-05-21 17:23:26,030 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=164 new_raw=171
+2026-05-21 17:23:26,032 [INFO] camera_property_apply camera_id=cam0 name=focus raw=171 value=171.0 applied=False reported=0.0
+2026-05-21 17:23:26,078 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=171 new_raw=196
+2026-05-21 17:23:26,080 [INFO] camera_property_apply camera_id=cam0 name=focus raw=196 value=196.0 applied=False reported=0.0
+2026-05-21 17:23:26,126 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=196 new_raw=213
+2026-05-21 17:23:26,128 [INFO] camera_property_apply camera_id=cam0 name=focus raw=213 value=213.0 applied=False reported=0.0
+2026-05-21 17:23:26,332 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=213 new_raw=223
+2026-05-21 17:23:26,335 [INFO] camera_property_apply camera_id=cam0 name=focus raw=223 value=223.0 applied=False reported=0.0
+2026-05-21 17:23:26,926 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=223 new_raw=225
+2026-05-21 17:23:26,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=225 value=225.0 applied=False reported=0.0
+2026-05-21 17:23:26,974 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=225 new_raw=235
+2026-05-21 17:23:26,977 [INFO] camera_property_apply camera_id=cam0 name=focus raw=235 value=235.0 applied=False reported=0.0
+2026-05-21 17:23:27,022 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=235 new_raw=236
+2026-05-21 17:23:27,024 [INFO] camera_property_apply camera_id=cam0 name=focus raw=236 value=236.0 applied=False reported=0.0
+2026-05-21 17:23:28,573 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=236 new_raw=235
+2026-05-21 17:23:28,575 [INFO] camera_property_apply camera_id=cam0 name=focus raw=235 value=235.0 applied=False reported=0.0
+2026-05-21 17:23:28,624 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=235 new_raw=234
+2026-05-21 17:23:28,626 [INFO] camera_property_apply camera_id=cam0 name=focus raw=234 value=234.0 applied=False reported=0.0
+2026-05-21 17:23:28,685 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=234 new_raw=231
+2026-05-21 17:23:28,686 [INFO] camera_property_apply camera_id=cam0 name=focus raw=231 value=231.0 applied=False reported=0.0
+2026-05-21 17:23:28,732 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=231 new_raw=230
+2026-05-21 17:23:28,734 [INFO] camera_property_apply camera_id=cam0 name=focus raw=230 value=230.0 applied=False reported=0.0
+2026-05-21 17:23:28,829 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=230 new_raw=229
+2026-05-21 17:23:28,831 [INFO] camera_property_apply camera_id=cam0 name=focus raw=229 value=229.0 applied=False reported=0.0
+2026-05-21 17:23:28,925 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=229 new_raw=228
+2026-05-21 17:23:28,927 [INFO] camera_property_apply camera_id=cam0 name=focus raw=228 value=228.0 applied=False reported=0.0
+2026-05-21 17:23:29,086 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=228 new_raw=222
+2026-05-21 17:23:29,088 [INFO] camera_property_apply camera_id=cam0 name=focus raw=222 value=222.0 applied=False reported=0.0
+2026-05-21 17:23:29,134 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=222 new_raw=201
+2026-05-21 17:23:29,136 [INFO] camera_property_apply camera_id=cam0 name=focus raw=201 value=201.0 applied=False reported=0.0
+2026-05-21 17:23:29,182 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=201 new_raw=198
+2026-05-21 17:23:29,184 [INFO] camera_property_apply camera_id=cam0 name=focus raw=198 value=198.0 applied=False reported=0.0
+2026-05-21 17:23:29,324 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=198 new_raw=189
+2026-05-21 17:23:29,327 [INFO] camera_property_apply camera_id=cam0 name=focus raw=189 value=189.0 applied=False reported=0.0
+2026-05-21 17:23:29,374 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=189 new_raw=166
+2026-05-21 17:23:29,376 [INFO] camera_property_apply camera_id=cam0 name=focus raw=166 value=166.0 applied=False reported=0.0
+2026-05-21 17:23:29,422 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=166 new_raw=164
+2026-05-21 17:23:29,423 [INFO] camera_property_apply camera_id=cam0 name=focus raw=164 value=164.0 applied=False reported=0.0
+2026-05-21 17:23:29,583 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=164 new_raw=145
+2026-05-21 17:23:29,585 [INFO] camera_property_apply camera_id=cam0 name=focus raw=145 value=145.0 applied=False reported=0.0
+2026-05-21 17:23:29,630 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=145 new_raw=123
+2026-05-21 17:23:29,632 [INFO] camera_property_apply camera_id=cam0 name=focus raw=123 value=123.0 applied=False reported=0.0
+2026-05-21 17:23:29,725 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=123 new_raw=113
+2026-05-21 17:23:29,727 [INFO] camera_property_apply camera_id=cam0 name=focus raw=113 value=113.0 applied=False reported=0.0
+2026-05-21 17:23:29,774 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=113 new_raw=87
+2026-05-21 17:23:29,776 [INFO] camera_property_apply camera_id=cam0 name=focus raw=87 value=87.0 applied=False reported=0.0
+2026-05-21 17:23:29,823 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=87 new_raw=78
+2026-05-21 17:23:29,825 [INFO] camera_property_apply camera_id=cam0 name=focus raw=78 value=78.0 applied=False reported=0.0
+2026-05-21 17:23:29,932 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=78 new_raw=66
+2026-05-21 17:23:29,934 [INFO] camera_property_apply camera_id=cam0 name=focus raw=66 value=66.0 applied=False reported=0.0
+2026-05-21 17:23:29,981 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=66 new_raw=44
+2026-05-21 17:23:29,983 [INFO] camera_property_apply camera_id=cam0 name=focus raw=44 value=44.0 applied=False reported=0.0
+2026-05-21 17:23:30,030 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=44 new_raw=41
+2026-05-21 17:23:30,031 [INFO] camera_property_apply camera_id=cam0 name=focus raw=41 value=41.0 applied=False reported=0.0
+2026-05-21 17:23:30,126 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=41 new_raw=38
+2026-05-21 17:23:30,185 [INFO] camera_property_apply camera_id=cam0 name=focus raw=38 value=38.0 applied=True reported=0.0
+2026-05-21 17:23:30,190 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=38 new_raw=17
+2026-05-21 17:23:30,248 [INFO] camera_property_apply camera_id=cam0 name=focus raw=17 value=17.0 applied=True reported=0.0
+2026-05-21 17:23:30,382 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=17 new_raw=16
+2026-05-21 17:23:30,387 [INFO] camera_property_apply camera_id=cam0 name=focus raw=16 value=16.0 applied=True reported=0.0
+2026-05-21 17:23:30,480 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=16 new_raw=15
+2026-05-21 17:23:30,485 [INFO] camera_property_apply camera_id=cam0 name=focus raw=15 value=15.0 applied=True reported=0.0
+2026-05-21 17:23:30,526 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=15 new_raw=0
+2026-05-21 17:23:30,569 [INFO] camera_property_apply camera_id=cam0 name=focus raw=0 value=0.0 applied=True reported=0.0
+2026-05-21 17:23:31,534 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=0 new_raw=30
+2026-05-21 17:23:31,610 [INFO] camera_property_apply camera_id=cam0 name=focus raw=30 value=30.0 applied=True reported=0.0
+2026-05-21 17:23:31,678 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=30 new_raw=31
+2026-05-21 17:23:31,686 [INFO] camera_property_apply camera_id=cam0 name=focus raw=31 value=31.0 applied=True reported=0.0
+2026-05-21 17:23:31,726 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=31 new_raw=41
+2026-05-21 17:23:31,728 [INFO] camera_property_apply camera_id=cam0 name=focus raw=41 value=41.0 applied=False reported=0.0
+2026-05-21 17:23:31,773 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=41 new_raw=43
+2026-05-21 17:23:31,775 [INFO] camera_property_apply camera_id=cam0 name=focus raw=43 value=43.0 applied=False reported=0.0
+2026-05-21 17:23:31,885 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=43 new_raw=48
+2026-05-21 17:23:31,886 [INFO] camera_property_apply camera_id=cam0 name=focus raw=48 value=48.0 applied=False reported=0.0
+2026-05-21 17:23:31,933 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=48 new_raw=51
+2026-05-21 17:23:31,935 [INFO] camera_property_apply camera_id=cam0 name=focus raw=51 value=51.0 applied=False reported=0.0
+2026-05-21 17:23:32,382 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=51 new_raw=52
+2026-05-21 17:23:32,384 [INFO] camera_property_apply camera_id=cam0 name=focus raw=52 value=52.0 applied=False reported=0.0
+2026-05-21 17:23:32,431 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=52 new_raw=59
+2026-05-21 17:23:32,433 [INFO] camera_property_apply camera_id=cam0 name=focus raw=59 value=59.0 applied=False reported=0.0
+2026-05-21 17:23:32,478 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=59 new_raw=61
+2026-05-21 17:23:32,480 [INFO] camera_property_apply camera_id=cam0 name=focus raw=61 value=61.0 applied=False reported=0.0
+2026-05-21 17:23:32,573 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=61 new_raw=65
+2026-05-21 17:23:32,575 [INFO] camera_property_apply camera_id=cam0 name=focus raw=65 value=65.0 applied=False reported=0.0
+2026-05-21 17:23:32,622 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=65 new_raw=85
+2026-05-21 17:23:32,624 [INFO] camera_property_apply camera_id=cam0 name=focus raw=85 value=85.0 applied=False reported=0.0
+2026-05-21 17:23:32,685 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=85 new_raw=94
+2026-05-21 17:23:32,687 [INFO] camera_property_apply camera_id=cam0 name=focus raw=94 value=94.0 applied=False reported=0.0
+2026-05-21 17:23:32,781 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=94 new_raw=102
+2026-05-21 17:23:32,783 [INFO] camera_property_apply camera_id=cam0 name=focus raw=102 value=102.0 applied=False reported=0.0
+2026-05-21 17:23:32,829 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=102 new_raw=117
+2026-05-21 17:23:32,831 [INFO] camera_property_apply camera_id=cam0 name=focus raw=117 value=117.0 applied=False reported=0.0
+2026-05-21 17:23:32,877 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=117 new_raw=121
+2026-05-21 17:23:32,879 [INFO] camera_property_apply camera_id=cam0 name=focus raw=121 value=121.0 applied=False reported=0.0
+2026-05-21 17:23:32,925 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=121 new_raw=127
+2026-05-21 17:23:32,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=127 value=127.0 applied=False reported=0.0
+2026-05-21 17:23:32,973 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=127 new_raw=133
+2026-05-21 17:23:32,975 [INFO] camera_property_apply camera_id=cam0 name=focus raw=133 value=133.0 applied=False reported=0.0
+2026-05-21 17:23:33,021 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=133 new_raw=138
+2026-05-21 17:23:33,023 [INFO] camera_property_apply camera_id=cam0 name=focus raw=138 value=138.0 applied=False reported=0.0
+2026-05-21 17:23:33,085 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=138 new_raw=151
+2026-05-21 17:23:33,087 [INFO] camera_property_apply camera_id=cam0 name=focus raw=151 value=151.0 applied=False reported=0.0
+2026-05-21 17:23:33,133 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=151 new_raw=184
+2026-05-21 17:23:33,135 [INFO] camera_property_apply camera_id=cam0 name=focus raw=184 value=184.0 applied=False reported=0.0
+2026-05-21 17:23:33,181 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=184 new_raw=196
+2026-05-21 17:23:33,183 [INFO] camera_property_apply camera_id=cam0 name=focus raw=196 value=196.0 applied=False reported=0.0
+2026-05-21 17:23:33,325 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=196 new_raw=197
+2026-05-21 17:23:33,327 [INFO] camera_property_apply camera_id=cam0 name=focus raw=197 value=197.0 applied=False reported=0.0
+2026-05-21 17:23:33,373 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=197 new_raw=211
+2026-05-21 17:23:33,375 [INFO] camera_property_apply camera_id=cam0 name=focus raw=211 value=211.0 applied=False reported=0.0
+2026-05-21 17:23:33,421 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=211 new_raw=219
+2026-05-21 17:23:33,423 [INFO] camera_property_apply camera_id=cam0 name=focus raw=219 value=219.0 applied=False reported=0.0
+2026-05-21 17:23:33,533 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=219 new_raw=222
+2026-05-21 17:23:33,535 [INFO] camera_property_apply camera_id=cam0 name=focus raw=222 value=222.0 applied=False reported=0.0
+2026-05-21 17:23:33,581 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=222 new_raw=227
+2026-05-21 17:23:33,583 [INFO] camera_property_apply camera_id=cam0 name=focus raw=227 value=227.0 applied=False reported=0.0
+2026-05-21 17:23:33,629 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=227 new_raw=228
+2026-05-21 17:23:33,630 [INFO] camera_property_apply camera_id=cam0 name=focus raw=228 value=228.0 applied=False reported=0.0
+2026-05-21 17:23:34,925 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=228 new_raw=227
+2026-05-21 17:23:34,927 [INFO] camera_property_apply camera_id=cam0 name=focus raw=227 value=227.0 applied=False reported=0.0
+2026-05-21 17:23:35,021 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=227 new_raw=226
+2026-05-21 17:23:35,022 [INFO] camera_property_apply camera_id=cam0 name=focus raw=226 value=226.0 applied=False reported=0.0
+2026-05-21 17:23:35,087 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=226 new_raw=225
+2026-05-21 17:23:35,089 [INFO] camera_property_apply camera_id=cam0 name=focus raw=225 value=225.0 applied=False reported=0.0
+2026-05-21 17:23:35,135 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=225 new_raw=224
+2026-05-21 17:23:35,137 [INFO] camera_property_apply camera_id=cam0 name=focus raw=224 value=224.0 applied=False reported=0.0
+2026-05-21 17:23:35,181 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=224 new_raw=223
+2026-05-21 17:23:35,183 [INFO] camera_property_apply camera_id=cam0 name=focus raw=223 value=223.0 applied=False reported=0.0
+2026-05-21 17:23:35,326 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=223 new_raw=241
+2026-05-21 17:23:35,328 [INFO] camera_property_apply camera_id=cam0 name=focus raw=241 value=241.0 applied=False reported=0.0
+2026-05-21 17:23:35,374 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=241 new_raw=255
+2026-05-21 17:23:35,376 [INFO] camera_property_apply camera_id=cam0 name=focus raw=255 value=255.0 applied=False reported=0.0
+2026-05-21 17:23:35,533 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=255 new_raw=251
+2026-05-21 17:23:35,535 [INFO] camera_property_apply camera_id=cam0 name=focus raw=251 value=251.0 applied=False reported=0.0
+2026-05-21 17:23:35,582 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=251 new_raw=247
+2026-05-21 17:23:35,583 [INFO] camera_property_apply camera_id=cam0 name=focus raw=247 value=247.0 applied=False reported=0.0
+2026-05-21 17:23:35,630 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=247 new_raw=244
+2026-05-21 17:23:35,631 [INFO] camera_property_apply camera_id=cam0 name=focus raw=244 value=244.0 applied=False reported=0.0
+2026-05-21 17:23:35,821 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=244 new_raw=245
+2026-05-21 17:23:35,823 [INFO] camera_property_apply camera_id=cam0 name=focus raw=245 value=245.0 applied=False reported=0.0
+2026-05-21 17:23:35,981 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=245 new_raw=247
+2026-05-21 17:23:35,982 [INFO] camera_property_apply camera_id=cam0 name=focus raw=247 value=247.0 applied=False reported=0.0
+2026-05-21 17:23:36,030 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=247 new_raw=248
+2026-05-21 17:23:36,032 [INFO] camera_property_apply camera_id=cam0 name=focus raw=248 value=248.0 applied=False reported=0.0
+2026-05-21 17:23:36,574 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=248 new_raw=250
+2026-05-21 17:23:36,575 [INFO] camera_property_apply camera_id=cam0 name=focus raw=250 value=250.0 applied=False reported=0.0
+2026-05-21 17:23:36,622 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=250 new_raw=255
+2026-05-21 17:23:36,624 [INFO] camera_property_apply camera_id=cam0 name=focus raw=255 value=255.0 applied=False reported=0.0
+2026-05-21 17:23:39,278 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=255 new_raw=254
+2026-05-21 17:23:39,281 [INFO] camera_property_apply camera_id=cam0 name=focus raw=254 value=254.0 applied=False reported=0.0
+2026-05-21 17:23:39,373 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=254 new_raw=253
+2026-05-21 17:23:39,375 [INFO] camera_property_apply camera_id=cam0 name=focus raw=253 value=253.0 applied=False reported=0.0
+2026-05-21 17:23:39,420 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=253 new_raw=243
+2026-05-21 17:23:39,422 [INFO] camera_property_apply camera_id=cam0 name=focus raw=243 value=243.0 applied=False reported=0.0
+2026-05-21 17:23:39,486 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=243 new_raw=218
+2026-05-21 17:23:39,487 [INFO] camera_property_apply camera_id=cam0 name=focus raw=218 value=218.0 applied=False reported=0.0
+2026-05-21 17:23:39,534 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=218 new_raw=207
+2026-05-21 17:23:39,536 [INFO] camera_property_apply camera_id=cam0 name=focus raw=207 value=207.0 applied=False reported=0.0
+2026-05-21 17:23:39,629 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=207 new_raw=206
+2026-05-21 17:23:39,631 [INFO] camera_property_apply camera_id=cam0 name=focus raw=206 value=206.0 applied=False reported=0.0
+2026-05-21 17:23:39,677 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=206 new_raw=165
+2026-05-21 17:23:39,679 [INFO] camera_property_apply camera_id=cam0 name=focus raw=165 value=165.0 applied=False reported=0.0
+2026-05-21 17:23:39,726 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=165 new_raw=148
+2026-05-21 17:23:39,728 [INFO] camera_property_apply camera_id=cam0 name=focus raw=148 value=148.0 applied=False reported=0.0
+2026-05-21 17:23:39,822 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=148 new_raw=136
+2026-05-21 17:23:39,824 [INFO] camera_property_apply camera_id=cam0 name=focus raw=136 value=136.0 applied=False reported=0.0
+2026-05-21 17:23:39,885 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=136 new_raw=127
+2026-05-21 17:23:39,887 [INFO] camera_property_apply camera_id=cam0 name=focus raw=127 value=127.0 applied=False reported=0.0
+2026-05-21 17:23:40,078 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=127 new_raw=100
+2026-05-21 17:23:40,080 [INFO] camera_property_apply camera_id=cam0 name=focus raw=100 value=100.0 applied=False reported=0.0
+2026-05-21 17:23:40,128 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=100 new_raw=73
+2026-05-21 17:23:40,130 [INFO] camera_property_apply camera_id=cam0 name=focus raw=73 value=73.0 applied=False reported=0.0
+2026-05-21 17:23:40,174 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=73 new_raw=70
+2026-05-21 17:23:40,175 [INFO] camera_property_apply camera_id=cam0 name=focus raw=70 value=70.0 applied=False reported=0.0
+2026-05-21 17:23:40,222 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=70 new_raw=65
+2026-05-21 17:23:40,224 [INFO] camera_property_apply camera_id=cam0 name=focus raw=65 value=65.0 applied=False reported=0.0
+2026-05-21 17:23:40,286 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=65 new_raw=62
+2026-05-21 17:23:40,287 [INFO] camera_property_apply camera_id=cam0 name=focus raw=62 value=62.0 applied=False reported=0.0
+2026-05-21 17:23:40,334 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=62 new_raw=55
+2026-05-21 17:23:40,336 [INFO] camera_property_apply camera_id=cam0 name=focus raw=55 value=55.0 applied=False reported=0.0
+2026-05-21 17:23:40,382 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=55 new_raw=49
+2026-05-21 17:23:40,384 [INFO] camera_property_apply camera_id=cam0 name=focus raw=49 value=49.0 applied=False reported=0.0
+2026-05-21 17:23:40,429 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=49 new_raw=38
+2026-05-21 17:23:40,451 [INFO] camera_property_apply camera_id=cam0 name=focus raw=38 value=38.0 applied=True reported=0.0
+2026-05-21 17:23:40,477 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=38 new_raw=29
+2026-05-21 17:23:40,503 [INFO] camera_property_apply camera_id=cam0 name=focus raw=29 value=29.0 applied=True reported=0.0
+2026-05-21 17:23:40,526 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=29 new_raw=28
+2026-05-21 17:23:40,532 [INFO] camera_property_apply camera_id=cam0 name=focus raw=28 value=28.0 applied=True reported=0.0
+2026-05-21 17:23:40,783 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=28 new_raw=20
+2026-05-21 17:23:40,805 [INFO] camera_property_apply camera_id=cam0 name=focus raw=20 value=20.0 applied=True reported=0.0
+2026-05-21 17:23:40,830 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=20 new_raw=18
+2026-05-21 17:23:40,837 [INFO] camera_property_apply camera_id=cam0 name=focus raw=18 value=18.0 applied=True reported=0.0
+2026-05-21 17:23:41,085 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=18 new_raw=17
+2026-05-21 17:23:41,091 [INFO] camera_property_apply camera_id=cam0 name=focus raw=17 value=17.0 applied=True reported=0.0
+2026-05-21 17:23:41,134 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=17 new_raw=14
+2026-05-21 17:23:41,144 [INFO] camera_property_apply camera_id=cam0 name=focus raw=14 value=14.0 applied=True reported=0.0
+2026-05-21 17:23:41,182 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=14 new_raw=11
+2026-05-21 17:23:41,193 [INFO] camera_property_apply camera_id=cam0 name=focus raw=11 value=11.0 applied=True reported=0.0
+2026-05-21 17:23:41,422 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=11 new_raw=8
+2026-05-21 17:23:41,431 [INFO] camera_property_apply camera_id=cam0 name=focus raw=8 value=8.0 applied=True reported=0.0
+2026-05-21 17:23:41,486 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=8 new_raw=6
+2026-05-21 17:23:41,493 [INFO] camera_property_apply camera_id=cam0 name=focus raw=6 value=6.0 applied=True reported=0.0
+2026-05-21 17:23:41,534 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=6 new_raw=5
+2026-05-21 17:23:41,539 [INFO] camera_property_apply camera_id=cam0 name=focus raw=5 value=5.0 applied=True reported=0.0
+2026-05-21 17:23:41,582 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=5 new_raw=0
+2026-05-21 17:23:41,602 [INFO] camera_property_apply camera_id=cam0 name=focus raw=0 value=0.0 applied=True reported=0.0
+2026-05-21 17:23:43,629 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=0 new_raw=10
+2026-05-21 17:23:43,658 [INFO] camera_property_apply camera_id=cam0 name=focus raw=10 value=10.0 applied=True reported=0.0
+2026-05-21 17:23:43,677 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=10 new_raw=22
+2026-05-21 17:23:43,707 [INFO] camera_property_apply camera_id=cam0 name=focus raw=22 value=22.0 applied=True reported=0.0
+2026-05-21 17:23:43,934 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=22 new_raw=25
+2026-05-21 17:23:43,943 [INFO] camera_property_apply camera_id=cam0 name=focus raw=25 value=25.0 applied=True reported=0.0
+2026-05-21 17:23:43,981 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=25 new_raw=34
+2026-05-21 17:23:44,007 [INFO] camera_property_apply camera_id=cam0 name=focus raw=34 value=34.0 applied=True reported=0.0
+2026-05-21 17:23:44,029 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=34 new_raw=36
+2026-05-21 17:23:44,037 [INFO] camera_property_apply camera_id=cam0 name=focus raw=36 value=36.0 applied=True reported=0.0
+2026-05-21 17:23:44,077 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=36 new_raw=38
+2026-05-21 17:23:44,086 [INFO] camera_property_apply camera_id=cam0 name=focus raw=38 value=38.0 applied=True reported=0.0
+2026-05-21 17:23:44,125 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=38 new_raw=44
+2026-05-21 17:23:44,127 [INFO] camera_property_apply camera_id=cam0 name=focus raw=44 value=44.0 applied=False reported=0.0
+2026-05-21 17:23:44,286 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=44 new_raw=50
+2026-05-21 17:23:44,288 [INFO] camera_property_apply camera_id=cam0 name=focus raw=50 value=50.0 applied=False reported=0.0
+2026-05-21 17:23:44,333 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=50 new_raw=80
+2026-05-21 17:23:44,335 [INFO] camera_property_apply camera_id=cam0 name=focus raw=80 value=80.0 applied=False reported=0.0
+2026-05-21 17:23:44,381 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=80 new_raw=91
+2026-05-21 17:23:44,383 [INFO] camera_property_apply camera_id=cam0 name=focus raw=91 value=91.0 applied=False reported=0.0
+2026-05-21 17:23:44,429 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=91 new_raw=94
+2026-05-21 17:23:44,431 [INFO] camera_property_apply camera_id=cam0 name=focus raw=94 value=94.0 applied=False reported=0.0
+2026-05-21 17:23:44,476 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=94 new_raw=101
+2026-05-21 17:23:44,478 [INFO] camera_property_apply camera_id=cam0 name=focus raw=101 value=101.0 applied=False reported=0.0
+2026-05-21 17:23:44,527 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=101 new_raw=109
+2026-05-21 17:23:44,529 [INFO] camera_property_apply camera_id=cam0 name=focus raw=109 value=109.0 applied=False reported=0.0
+2026-05-21 17:23:44,573 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=109 new_raw=121
+2026-05-21 17:23:44,575 [INFO] camera_property_apply camera_id=cam0 name=focus raw=121 value=121.0 applied=False reported=0.0
+2026-05-21 17:23:44,621 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=121 new_raw=148
+2026-05-21 17:23:44,623 [INFO] camera_property_apply camera_id=cam0 name=focus raw=148 value=148.0 applied=False reported=0.0
+2026-05-21 17:23:44,686 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=148 new_raw=162
+2026-05-21 17:23:44,688 [INFO] camera_property_apply camera_id=cam0 name=focus raw=162 value=162.0 applied=False reported=0.0
+2026-05-21 17:23:44,734 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=162 new_raw=165
+2026-05-21 17:23:44,736 [INFO] camera_property_apply camera_id=cam0 name=focus raw=165 value=165.0 applied=False reported=0.0
+2026-05-21 17:23:44,829 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=165 new_raw=164
+2026-05-21 17:23:44,831 [INFO] camera_property_apply camera_id=cam0 name=focus raw=164 value=164.0 applied=False reported=0.0
+2026-05-21 17:23:44,877 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=164 new_raw=159
+2026-05-21 17:23:44,879 [INFO] camera_property_apply camera_id=cam0 name=focus raw=159 value=159.0 applied=False reported=0.0
+2026-05-21 17:23:44,926 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=159 new_raw=109
+2026-05-21 17:23:44,928 [INFO] camera_property_apply camera_id=cam0 name=focus raw=109 value=109.0 applied=False reported=0.0
+2026-05-21 17:23:44,973 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=109 new_raw=84
+2026-05-21 17:23:44,975 [INFO] camera_property_apply camera_id=cam0 name=focus raw=84 value=84.0 applied=False reported=0.0
+2026-05-21 17:23:45,022 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=84 new_raw=83
+2026-05-21 17:23:45,023 [INFO] camera_property_apply camera_id=cam0 name=focus raw=83 value=83.0 applied=False reported=0.0
+2026-05-21 17:23:45,134 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=83 new_raw=62
+2026-05-21 17:23:45,136 [INFO] camera_property_apply camera_id=cam0 name=focus raw=62 value=62.0 applied=False reported=0.0
+2026-05-21 17:23:45,181 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=62 new_raw=38
+2026-05-21 17:23:45,184 [INFO] camera_property_apply camera_id=cam0 name=focus raw=38 value=38.0 applied=True reported=0.0
+2026-05-21 17:23:45,229 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=38 new_raw=31
+2026-05-21 17:23:45,250 [INFO] camera_property_apply camera_id=cam0 name=focus raw=31 value=31.0 applied=True reported=0.0
+2026-05-21 17:23:45,276 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=31 new_raw=23
+2026-05-21 17:23:45,298 [INFO] camera_property_apply camera_id=cam0 name=focus raw=23 value=23.0 applied=True reported=0.0
+2026-05-21 17:23:45,326 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=23 new_raw=12
+2026-05-21 17:23:45,354 [INFO] camera_property_apply camera_id=cam0 name=focus raw=12 value=12.0 applied=True reported=0.0
+2026-05-21 17:23:45,678 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=12 new_raw=11
+2026-05-21 17:23:45,683 [INFO] camera_property_apply camera_id=cam0 name=focus raw=11 value=11.0 applied=True reported=0.0
+2026-05-21 17:23:45,726 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=11 new_raw=9
+2026-05-21 17:23:45,734 [INFO] camera_property_apply camera_id=cam0 name=focus raw=9 value=9.0 applied=True reported=0.0
+2026-05-21 17:23:45,772 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=9 new_raw=8
+2026-05-21 17:23:45,779 [INFO] camera_property_apply camera_id=cam0 name=focus raw=8 value=8.0 applied=True reported=0.0
+2026-05-21 17:23:45,822 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=8 new_raw=7
+2026-05-21 17:23:45,827 [INFO] camera_property_apply camera_id=cam0 name=focus raw=7 value=7.0 applied=True reported=0.0
+2026-05-21 17:23:45,886 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=7 new_raw=6
+2026-05-21 17:23:45,893 [INFO] camera_property_apply camera_id=cam0 name=focus raw=6 value=6.0 applied=True reported=0.0
+2026-05-21 17:23:46,030 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=6 new_raw=8
+2026-05-21 17:23:46,038 [INFO] camera_property_apply camera_id=cam0 name=focus raw=8 value=8.0 applied=True reported=0.0
+2026-05-21 17:23:46,077 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=8 new_raw=9
+2026-05-21 17:23:46,083 [INFO] camera_property_apply camera_id=cam0 name=focus raw=9 value=9.0 applied=True reported=0.0
+2026-05-21 17:23:46,830 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=9 new_raw=10
+2026-05-21 17:23:46,837 [INFO] camera_property_apply camera_id=cam0 name=focus raw=10 value=10.0 applied=True reported=0.0
+2026-05-21 17:23:46,879 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=10 new_raw=12
+2026-05-21 17:23:46,887 [INFO] camera_property_apply camera_id=cam0 name=focus raw=12 value=12.0 applied=True reported=0.0
+2026-05-21 17:23:47,134 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=12 new_raw=13
+2026-05-21 17:23:47,141 [INFO] camera_property_apply camera_id=cam0 name=focus raw=13 value=13.0 applied=True reported=0.0
+2026-05-21 17:23:47,230 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=13 new_raw=14
+2026-05-21 17:23:47,235 [INFO] camera_property_apply camera_id=cam0 name=focus raw=14 value=14.0 applied=True reported=0.0
+2026-05-21 17:23:47,725 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=14 new_raw=15
+2026-05-21 17:23:47,730 [INFO] camera_property_apply camera_id=cam0 name=focus raw=15 value=15.0 applied=True reported=0.0
+2026-05-21 17:23:47,982 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=15 new_raw=16
+2026-05-21 17:23:47,988 [INFO] camera_property_apply camera_id=cam0 name=focus raw=16 value=16.0 applied=True reported=0.0
+2026-05-21 17:23:48,488 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=16 new_raw=15
+2026-05-21 17:23:48,494 [INFO] camera_property_apply camera_id=cam0 name=focus raw=15 value=15.0 applied=True reported=0.0
+2026-05-21 17:23:48,532 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=15 new_raw=12
+2026-05-21 17:23:48,542 [INFO] camera_property_apply camera_id=cam0 name=focus raw=12 value=12.0 applied=True reported=0.0
+2026-05-21 17:23:48,574 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=12 new_raw=11
+2026-05-21 17:23:48,579 [INFO] camera_property_apply camera_id=cam0 name=focus raw=11 value=11.0 applied=True reported=0.0
+2026-05-21 17:23:48,685 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=11 new_raw=10
+2026-05-21 17:23:48,690 [INFO] camera_property_apply camera_id=cam0 name=focus raw=10 value=10.0 applied=True reported=0.0
+2026-05-21 17:23:48,732 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=10 new_raw=9
+2026-05-21 17:23:48,738 [INFO] camera_property_apply camera_id=cam0 name=focus raw=9 value=9.0 applied=True reported=0.0
+2026-05-21 17:23:48,781 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=9 new_raw=8
+2026-05-21 17:23:48,785 [INFO] camera_property_apply camera_id=cam0 name=focus raw=8 value=8.0 applied=True reported=0.0
+2026-05-21 17:23:48,878 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=8 new_raw=7
+2026-05-21 17:23:48,883 [INFO] camera_property_apply camera_id=cam0 name=focus raw=7 value=7.0 applied=True reported=0.0
+2026-05-21 17:23:49,022 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=7 new_raw=6
+2026-05-21 17:23:49,027 [INFO] camera_property_apply camera_id=cam0 name=focus raw=6 value=6.0 applied=True reported=0.0
+2026-05-21 17:23:49,085 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=6 new_raw=5
+2026-05-21 17:23:49,090 [INFO] camera_property_apply camera_id=cam0 name=focus raw=5 value=5.0 applied=True reported=0.0
+2026-05-21 17:23:49,134 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=5 new_raw=4
+2026-05-21 17:23:49,139 [INFO] camera_property_apply camera_id=cam0 name=focus raw=4 value=4.0 applied=True reported=0.0
+2026-05-21 17:23:49,325 [INFO] camera_property_changed camera_id=cam0 name=focus old_raw=4 new_raw=3
+2026-05-21 17:23:49,330 [INFO] camera_property_apply camera_id=cam0 name=focus raw=3 value=3.0 applied=True reported=0.0
+2026-05-21 17:23:51,134 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=60 new_raw=59
+2026-05-21 17:23:51,135 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=59 value=0.59 applied=True reported=133.0
+2026-05-21 17:23:51,233 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=59 new_raw=58
+2026-05-21 17:23:51,235 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=58 value=0.58 applied=True reported=133.0
+2026-05-21 17:23:51,281 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=58 new_raw=53
+2026-05-21 17:23:51,282 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=53 value=0.53 applied=True reported=133.0
+2026-05-21 17:23:51,326 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=53 new_raw=49
+2026-05-21 17:23:51,328 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=49 value=0.49 applied=True reported=133.0
+2026-05-21 17:23:51,533 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=49 new_raw=46
+2026-05-21 17:23:51,535 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=46 value=0.46 applied=True reported=133.0
+2026-05-21 17:23:51,581 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=46 new_raw=36
+2026-05-21 17:23:51,583 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=36 value=0.36 applied=True reported=133.0
+2026-05-21 17:23:51,885 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=36 new_raw=35
+2026-05-21 17:23:51,887 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=35 value=0.35 applied=True reported=133.0
+2026-05-21 17:23:51,935 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=35 new_raw=28
+2026-05-21 17:23:51,936 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=28 value=0.28 applied=True reported=133.0
+2026-05-21 17:23:52,029 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=28 new_raw=27
+2026-05-21 17:23:52,030 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=27 value=0.27 applied=True reported=133.0
+2026-05-21 17:23:52,077 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=27 new_raw=24
+2026-05-21 17:23:52,078 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=24 value=0.24 applied=True reported=133.0
+2026-05-21 17:23:52,126 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=24 new_raw=22
+2026-05-21 17:23:52,127 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=22 value=0.22 applied=True reported=133.0
+2026-05-21 17:23:52,285 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=22 new_raw=21
+2026-05-21 17:23:52,286 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=21 value=0.21 applied=True reported=133.0
+2026-05-21 17:23:52,336 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=21 new_raw=4
+2026-05-21 17:23:52,337 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=4 value=0.04 applied=True reported=133.0
+2026-05-21 17:23:52,829 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=4 new_raw=3
+2026-05-21 17:23:52,830 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=3 value=0.03 applied=True reported=133.0
+2026-05-21 17:23:52,881 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=3 new_raw=2
+2026-05-21 17:23:52,882 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=2 value=0.02 applied=True reported=133.0
+2026-05-21 17:23:53,084 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=2 new_raw=1
+2026-05-21 17:23:53,085 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=1 value=0.01 applied=True reported=133.0
+2026-05-21 17:23:53,229 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=1 new_raw=0
+2026-05-21 17:23:53,231 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=0 value=0.0 applied=True reported=133.0
+2026-05-21 17:23:54,333 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=0 new_raw=1
+2026-05-21 17:23:54,334 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=1 value=0.01 applied=True reported=133.0
+2026-05-21 17:23:54,381 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=1 new_raw=3
+2026-05-21 17:23:54,383 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=3 value=0.03 applied=True reported=133.0
+2026-05-21 17:23:54,476 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=3 new_raw=4
+2026-05-21 17:23:54,477 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=4 value=0.04 applied=True reported=133.0
+2026-05-21 17:23:54,973 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=4 new_raw=5
+2026-05-21 17:23:54,974 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=5 value=0.05 applied=True reported=133.0
+2026-05-21 17:23:56,030 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=5 new_raw=4
+2026-05-21 17:23:56,031 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=4 value=0.04 applied=True reported=133.0
+2026-05-21 17:23:56,078 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=4 new_raw=3
+2026-05-21 17:23:56,079 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=3 value=0.03 applied=True reported=133.0
+2026-05-21 17:23:56,126 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=3 new_raw=2
+2026-05-21 17:23:56,128 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=2 value=0.02 applied=True reported=133.0
+2026-05-21 17:23:56,285 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=2 new_raw=3
+2026-05-21 17:23:56,287 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=3 value=0.03 applied=True reported=133.0
+2026-05-21 17:23:56,333 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=3 new_raw=4
+2026-05-21 17:23:56,334 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=4 value=0.04 applied=True reported=133.0
+2026-05-21 17:23:56,877 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=4 new_raw=2
+2026-05-21 17:23:56,878 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=2 value=0.02 applied=True reported=133.0
+2026-05-21 17:23:57,023 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=2 new_raw=3
+2026-05-21 17:23:57,024 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=3 value=0.03 applied=True reported=133.0
+2026-05-21 17:23:57,086 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=3 new_raw=4
+2026-05-21 17:23:57,087 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=4 value=0.04 applied=True reported=133.0
+2026-05-21 17:23:57,373 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=4 new_raw=3
+2026-05-21 17:23:57,374 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=3 value=0.03 applied=True reported=133.0
+2026-05-21 17:23:57,423 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=3 new_raw=2
+2026-05-21 17:23:57,424 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=2 value=0.02 applied=True reported=133.0
+2026-05-21 17:23:57,535 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=2 new_raw=4
+2026-05-21 17:23:57,536 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=4 value=0.04 applied=True reported=133.0
+2026-05-21 17:23:57,678 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=4 new_raw=2
+2026-05-21 17:23:57,679 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=2 value=0.02 applied=True reported=133.0
+2026-05-21 17:23:57,934 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=2 new_raw=1
+2026-05-21 17:23:57,936 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=1 value=0.01 applied=True reported=133.0
+2026-05-21 17:23:58,174 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=1 new_raw=2
+2026-05-21 17:23:58,175 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=2 value=0.02 applied=True reported=133.0
+2026-05-21 17:23:58,877 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=2 new_raw=3
+2026-05-21 17:23:58,878 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=3 value=0.03 applied=True reported=133.0
+2026-05-21 17:23:58,925 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=3 new_raw=6
+2026-05-21 17:23:58,926 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=6 value=0.06 applied=True reported=133.0
+2026-05-21 17:23:58,974 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=6 new_raw=13
+2026-05-21 17:23:58,975 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=13 value=0.13 applied=True reported=133.0
+2026-05-21 17:23:59,037 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=13 new_raw=18
+2026-05-21 17:23:59,038 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=18 value=0.18 applied=True reported=133.0
+2026-05-21 17:23:59,086 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=18 new_raw=23
+2026-05-21 17:23:59,087 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=23 value=0.23 applied=True reported=133.0
+2026-05-21 17:23:59,133 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=23 new_raw=24
+2026-05-21 17:23:59,134 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=24 value=0.24 applied=True reported=133.0
+2026-05-21 17:23:59,229 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=24 new_raw=25
+2026-05-21 17:23:59,231 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=25 value=0.25 applied=True reported=133.0
+2026-05-21 17:23:59,278 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=25 new_raw=26
+2026-05-21 17:23:59,279 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=26 value=0.26 applied=True reported=133.0
+2026-05-21 17:23:59,326 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=26 new_raw=25
+2026-05-21 17:23:59,328 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=25 value=0.25 applied=True reported=133.0
+2026-05-21 17:23:59,374 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=25 new_raw=24
+2026-05-21 17:23:59,375 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=24 value=0.24 applied=True reported=133.0
+2026-05-21 17:23:59,437 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=24 new_raw=23
+2026-05-21 17:23:59,438 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=23 value=0.23 applied=True reported=133.0
+2026-05-21 17:23:59,485 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=23 new_raw=22
+2026-05-21 17:23:59,486 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=22 value=0.22 applied=True reported=133.0
+2026-05-21 17:23:59,535 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=22 new_raw=21
+2026-05-21 17:23:59,537 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=21 value=0.21 applied=True reported=133.0
+2026-05-21 17:23:59,629 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=21 new_raw=22
+2026-05-21 17:23:59,631 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=22 value=0.22 applied=True reported=133.0
+2026-05-21 17:23:59,677 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=22 new_raw=25
+2026-05-21 17:23:59,678 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=25 value=0.25 applied=True reported=133.0
+2026-05-21 17:23:59,838 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=25 new_raw=24
+2026-05-21 17:23:59,839 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=24 value=0.24 applied=True reported=133.0
+2026-05-21 17:23:59,885 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=24 new_raw=23
+2026-05-21 17:23:59,886 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=23 value=0.23 applied=True reported=133.0
+2026-05-21 17:23:59,981 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=23 new_raw=24
+2026-05-21 17:23:59,982 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=24 value=0.24 applied=True reported=133.0
+2026-05-21 17:24:00,173 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=24 new_raw=4
+2026-05-21 17:24:00,174 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=4 value=0.04 applied=True reported=133.0
+2026-05-21 17:24:01,534 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=4 new_raw=8
+2026-05-21 17:24:01,535 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=8 value=0.08 applied=True reported=133.0
+2026-05-21 17:24:01,582 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=8 new_raw=19
+2026-05-21 17:24:01,583 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=19 value=0.19 applied=True reported=133.0
+2026-05-21 17:24:01,628 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=19 new_raw=42
+2026-05-21 17:24:01,630 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=42 value=0.42 applied=True reported=133.0
+2026-05-21 17:24:01,677 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=42 new_raw=48
+2026-05-21 17:24:01,678 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=48 value=0.48 applied=True reported=133.0
+2026-05-21 17:24:01,886 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=48 new_raw=33
+2026-05-21 17:24:01,888 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=33 value=0.33 applied=True reported=133.0
+2026-05-21 17:24:01,934 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=33 new_raw=32
+2026-05-21 17:24:01,936 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=32 value=0.32 applied=True reported=133.0
+2026-05-21 17:24:02,030 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=32 new_raw=35
+2026-05-21 17:24:02,031 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=35 value=0.35 applied=True reported=133.0
+2026-05-21 17:24:02,078 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=35 new_raw=45
+2026-05-21 17:24:02,079 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=45 value=0.45 applied=True reported=133.0
+2026-05-21 17:24:02,287 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=45 new_raw=42
+2026-05-21 17:24:02,289 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=42 value=0.42 applied=True reported=133.0
+2026-05-21 17:24:02,430 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=42 new_raw=44
+2026-05-21 17:24:02,431 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=44 value=0.44 applied=True reported=133.0
+2026-05-21 17:24:02,478 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=44 new_raw=49
+2026-05-21 17:24:02,480 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=49 value=0.49 applied=True reported=133.0
+2026-05-21 17:24:02,525 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=49 new_raw=51
+2026-05-21 17:24:02,526 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=51 value=0.51 applied=True reported=133.0
+2026-05-21 17:24:02,573 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=51 new_raw=57
+2026-05-21 17:24:02,573 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=57 value=0.57 applied=True reported=133.0
+2026-05-21 17:24:02,637 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=57 new_raw=59
+2026-05-21 17:24:02,638 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=59 value=0.59 applied=True reported=133.0
+2026-05-21 17:24:02,686 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=59 new_raw=62
+2026-05-21 17:24:02,687 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=62 value=0.62 applied=True reported=133.0
+2026-05-21 17:24:02,829 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=62 new_raw=59
+2026-05-21 17:24:02,831 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=59 value=0.59 applied=True reported=133.0
+2026-05-21 17:24:02,877 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=59 new_raw=38
+2026-05-21 17:24:02,878 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=38 value=0.38 applied=True reported=133.0
+2026-05-21 17:24:02,926 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=38 new_raw=37
+2026-05-21 17:24:02,928 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=37 value=0.37 applied=True reported=133.0
+2026-05-21 17:24:03,037 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=37 new_raw=52
+2026-05-21 17:24:03,038 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=52 value=0.52 applied=True reported=133.0
+2026-05-21 17:24:03,085 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=52 new_raw=64
+2026-05-21 17:24:03,087 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=64 value=0.64 applied=True reported=133.0
+2026-05-21 17:24:03,182 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=64 new_raw=63
+2026-05-21 17:24:03,183 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=63 value=0.63 applied=True reported=133.0
+2026-05-21 17:24:03,228 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=63 new_raw=54
+2026-05-21 17:24:03,230 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=54 value=0.54 applied=True reported=133.0
+2026-05-21 17:24:03,373 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=54 new_raw=58
+2026-05-21 17:24:03,374 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=58 value=0.58 applied=True reported=133.0
+2026-05-21 17:24:03,438 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=58 new_raw=59
+2026-05-21 17:24:03,441 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=59 value=0.59 applied=True reported=133.0
+2026-05-21 17:24:03,582 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=59 new_raw=61
+2026-05-21 17:24:03,583 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=61 value=0.61 applied=True reported=133.0
+2026-05-21 17:24:03,629 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=61 new_raw=65
+2026-05-21 17:24:03,630 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=65 value=0.65 applied=True reported=133.0
+2026-05-21 17:24:03,773 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=65 new_raw=68
+2026-05-21 17:24:03,774 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=68 value=0.68 applied=True reported=133.0
+2026-05-21 17:24:03,837 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=68 new_raw=76
+2026-05-21 17:24:03,838 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=76 value=0.76 applied=True reported=133.0
+2026-05-21 17:24:04,173 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=76 new_raw=80
+2026-05-21 17:24:04,174 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=80 value=0.8 applied=True reported=133.0
+2026-05-21 17:24:04,237 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=80 new_raw=84
+2026-05-21 17:24:04,238 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=84 value=0.84 applied=True reported=133.0
+2026-05-21 17:24:04,381 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=84 new_raw=86
+2026-05-21 17:24:04,382 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=86 value=0.86 applied=True reported=133.0
+2026-05-21 17:24:04,428 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=86 new_raw=91
+2026-05-21 17:24:04,429 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=91 value=0.91 applied=True reported=133.0
+2026-05-21 17:24:04,478 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=91 new_raw=92
+2026-05-21 17:24:04,479 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=92 value=0.92 applied=True reported=133.0
+2026-05-21 17:24:09,230 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=92 new_raw=88
+2026-05-21 17:24:09,231 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=88 value=0.88 applied=True reported=133.0
+2026-05-21 17:24:09,277 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=88 new_raw=81
+2026-05-21 17:24:09,278 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=81 value=0.81 applied=True reported=133.0
+2026-05-21 17:24:09,326 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=81 new_raw=72
+2026-05-21 17:24:09,327 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=72 value=0.72 applied=True reported=133.0
+2026-05-21 17:24:09,374 [INFO] camera_property_changed camera_id=cam0 name=brightness old_raw=72 new_raw=69
+2026-05-21 17:24:09,375 [INFO] camera_property_apply camera_id=cam0 name=brightness raw=69 value=0.69 applied=True reported=133.0
+2026-05-21 17:24:10,357 [WARNING] camera_controls_reset_to_driver_defaults camera_id=cam0
+2026-05-21 17:24:10,372 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:10,506 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:10,506 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:24:11,531 [WARNING] camera_controls_reset_to_driver_defaults camera_id=cam0
+2026-05-21 17:24:11,550 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:11,701 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:11,701 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:24:12,510 [WARNING] camera_controls_reset_to_driver_defaults camera_id=cam0
+2026-05-21 17:24:12,543 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:12,668 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:12,668 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:24:13,481 [WARNING] camera_controls_reset_to_driver_defaults camera_id=cam0
+2026-05-21 17:24:13,489 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:13,606 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:13,606 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:24:14,416 [WARNING] camera_controls_reset_to_driver_defaults camera_id=cam0
+2026-05-21 17:24:14,421 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:14,531 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:14,531 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:24:17,696 [WARNING] camera_controls_reset_to_driver_defaults camera_id=cam0
+2026-05-21 17:24:17,701 [INFO] camera_open_attempt camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:17,813 [INFO] camera_opened camera_id=cam0 device_index=0 backend=CAP_MSMF
+2026-05-21 17:24:17,813 [INFO] camera_preview_opened camera_id=cam0
+2026-05-21 17:24:33,392 [INFO] camera_controls_closed camera_id=cam0
+2026-05-21 17:24:35,472 [INFO] SEE> 
+2026-05-21 17:24:35,655 [INFO] SEE> 
+2026-05-21 17:24:35,835 [INFO] SEE> 
+2026-05-21 17:24:36,167 [INFO] SEE> 
