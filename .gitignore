@@ -4,19 +4,8 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-# Ignore plug-in source file for debug
-SuperCarter/SuperCarter/bin/Debug/result/
-SuperCarter/SuperCarter/bin/Debug/img/
 
-# Ignore plug-in source file for debug
-SuperCarter/SuperCarter/bin/Debug/src/Touchpad/logs/
-SuperCarter/SuperCarter/bin/Debug/src/Touchpad/img/
-SuperCarter/SuperCarter/bin/Debug/src/Touchpad/result/
-
-# Ignore plug-in source file for release
-SuperCarter/SuperCarter/bin/Release/src/Touchpad/logs/
-SuperCarter/SuperCarter/bin/Release/src/Touchpad/img/
-SuperCarter/SuperCarter/bin/Release/src/Touchpad/result/
+ErrorLog/
 
 # Archives
 *.7z
@@ -32,8 +21,6 @@ logs/
 */logs/
 **/logs/
 
-SuperCarter/SuperCarterTests/bin/
-SuperCarter/SuperCarter.Tests.XUnit/bin/
 # IDE folders
 .vs/
 */.vs/
@@ -75,20 +62,4 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\*.jpg
-D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\*.png
-D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\**\*.jpg
-D:\YQHubRepo\Tool-SuperCarter\SuperCarter\SuperCarter\Camera\**\*.png
 
-# SEE local development artifacts
-SuperCarter/SuperCarter/Camera/camera_v2/.venv/
-SuperCarter/SuperCarter/Camera/camera_v2/__pycache__/
-SuperCarter/SuperCarter/Camera/camera_v2/.dotnet/
-SuperCarter/SuperCarter/Camera/camera_v2/_internal/
-SuperCarter/SuperCarter/Camera/camera_v2/build/
-SuperCarter/SuperCarter/Camera/camera_v2/dist/
-SuperCarter/SuperCarter/Camera/camera_v2/SuperEagleEye.exe
-SuperCarter/SuperCarter/Camera/camera_v2/SuperEagleEye.spec
-SuperCarter/SuperCarter/tools/SuperEagleEye_dist/
-SuperCarter/SuperCarter/Camera/videos/output_2026-04-21_08-59-11_1.jpg
-SuperCarter/SuperCarter/Camera/videos/output_2026-04-21_09-00-11_1.jpg
