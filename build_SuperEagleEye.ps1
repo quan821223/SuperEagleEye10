@@ -27,7 +27,7 @@ $legacyToolsRuntimeRoot = Join-Path $projectRoot "tools\SuperEagleEye_dist"
 Push-Location $root
 
 Invoke-Step -Command { py -3 --version } -ErrorMessage "Python 3 is required but was not found by the Windows py launcher"
-Invoke-Step -Command { py -3 -m pip install pyinstaller opencv-python grpcio grpcio-tools protobuf } -ErrorMessage "Failed to install required Python packages"
+Invoke-Step -Command { py -3 -m pip install pyinstaller opencv-python grpcio grpcio-tools protobuf comtypes } -ErrorMessage "Failed to install required Python packages"
 
 foreach ($path in @($buildRoot, $publishRuntimeRoot, $legacyToolsRuntimeRoot))
 {

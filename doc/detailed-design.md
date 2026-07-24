@@ -14,7 +14,8 @@
 - [logging-runtime-state](logging-runtime-state.md): log file、stdout/stderr redirect、crash log。
 - [camera-model-config](camera-model-config.md): CameraConfig、CameraDescriptor、camera_map。
 - [recording-session](recording-session.md): segmented video writer。
-- [camera-session](camera-session.md): single camera preview、snapshot、recording、property panel。
+- [camera-session](camera-session.md): single camera preview、snapshot、recording、property 邏輯（不含 UI）。
+- [camera-controls-ui](camera-controls-ui.md): 屬性面板 UI（Tk），跟 camera-session 分離。
 - [camera-manager](camera-manager.md): discovery、logical slot、hot-plug、session ownership。
 - [command-router](command-router.md): command/query dispatch、auth、runtime info。
 - [grpc-service](grpc-service.md): SEE gRPC service adapter。
@@ -33,11 +34,11 @@
 
 ## Camera Control Panel Design
 
-- `CameraSession.controls_enabled` controls whether the OpenCV controls panel should exist.
-- `open_controls_panel()` sets `controls_enabled=True` and creates trackbars.
+- UI and property logic are split: `CameraControlsUI` owns the panel window (Tk, its own dedicated thread); `CameraSession` owns brightness/focus logic and never imports a GUI toolkit.
+- `CameraSession.controls_enabled` controls whether the panel is considered open; `CameraManager.open_camera_panel()`/`close_camera_panel()` toggle it and also tell `CameraControlsUI` to show/destroy the window.
 - The controls panel only exposes `brightness` and `focus`.
-- `_sync_controls_with_camera()` runs in preview loop but returns immediately if controls are disabled.
-- If user closes the panel window, `_sync_controls_with_camera()` marks controls disabled and does not treat it as an error.
+- The UI reports slider changes through `CameraSession.request_property_value()` (thread-safe). `_sync_controls_with_camera()` runs in the preview loop, drains those pending values, and returns immediately if controls are disabled.
+- Applying a value prefers native DirectShow control (`IAMVideoProcAmp`/`IAMCameraControl`, applied immediately); it falls back to OpenCV `capture.set()` via a debounced release+reopen only if native control is unavailable.
 - Opening a camera does not apply any property unless the user has modified that property before.
 - `_camera_prop_modified_names` records the exact properties changed by the user.
 - Reopen applies only modified brightness / focus properties, not every cached default.

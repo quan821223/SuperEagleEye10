@@ -61,5 +61,5 @@
 
 - OpenCV property support 依 camera driver 與 backend 而定；目前只暴露 brightness 與 focus。
 - `CAP_DSHOW` 與 `CAP_MSMF` 對同一 property 的值域可能不同。
-- 使用 OpenCV HighGUI window / trackbar 時，使用者直接關閉視窗會造成 window state 變化，程式必須將其視為正常事件。
+- 屬性面板（`camera-controls-ui.md`）是獨立 Tk 視窗；使用者直接關閉視窗會造成 window state 變化，程式必須將其視為正常事件。
 - Windows camera discovery 透過 PowerShell / CIM 查詢可能 timeout，因此不可把單次查詢失敗直接視為 camera disconnected。

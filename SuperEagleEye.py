@@ -17,7 +17,223 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Set, Tuple
 
+# OpenCV's native (C++) logger writes straight to the OS stderr, bypassing
+# Python's `logging`/`sys.stderr` entirely, so none of the console-filtering
+# in `configure_runtime_logging()` can touch it. On machines where a
+# configured device_index doesn't correspond to a real camera, every
+# VideoCapture open attempt (including our own reconnect retries) prints raw
+# "[ WARN:...] VIDEOIO(...): backend is generally available but can't be used
+# to capture by index" / obsensor "Camera index out of range" lines straight
+# to the console. Silence that native logger; our own LOGGER already records
+# camera_open_failed/camera_open_retry for the same events.
+os.environ.setdefault("OPENCV_LOG_LEVEL", "SILENT")
+os.environ.setdefault("OPENCV_VIDEOIO_DEBUG", "0")
+
 import cv2
+
+try:
+    cv2.utils.logging.setLogLevel(cv2.utils.logging.LOG_LEVEL_SILENT)
+except AttributeError:
+    pass
+
+# --- Optional native Windows camera control -------------------------------
+#
+# OpenCV's `VideoCapture.set()` on a live MSMF/DSHOW stream is unreliable for
+# brightness/focus on many UVC drivers, and manual focus gets silently
+# overridden while autofocus is on. DirectShow's IAMVideoProcAmp (brightness)
+# and IAMCameraControl (focus) talk to the driver directly and are what
+# native "camera settings" utilities use. There is no public typelib for
+# these two interfaces (they predate typelib-based automation), so they are
+# declared by hand via `comtypes` rather than generated — this also avoids
+# comtypes.client's runtime typelib codegen/caching, which would be fragile
+# in a frozen PyInstaller build. Everything here is best-effort: any failure
+# (comtypes missing, device not matched, COM error) falls back to the
+# existing OpenCV-based property path in `CameraSession`.
+try:
+    import ctypes as _ctypes
+    from ctypes import HRESULT as _HRESULT, POINTER as _POINTER, c_long as _c_long, c_ulong as _c_ulong, c_ulonglong as _c_ulonglong, c_int as _c_int
+    import comtypes
+    from comtypes import GUID, COMMETHOD, IUnknown, IPersist, CoCreateInstance
+    from comtypes.persist import IPropertyBag
+
+    _DSHOW_CONTROL_AVAILABLE = True
+except Exception:
+    _DSHOW_CONTROL_AVAILABLE = False
+
+if _DSHOW_CONTROL_AVAILABLE:
+    _CLSID_SYSTEM_DEVICE_ENUM = GUID("{62BE5D10-60EB-11d0-BD3B-00A0C911CE86}")
+    _CLSID_VIDEO_INPUT_DEVICE_CATEGORY = GUID("{860BB310-5D01-11d0-BD3B-00A0C911CE86}")
+    _IID_ICREATE_DEV_ENUM = GUID("{29840822-5B84-11D0-BD3B-00A0C911CE86}")
+
+    DSHOW_CAMERA_CONTROL_EXPOSURE = 4
+    DSHOW_CAMERA_CONTROL_FOCUS = 6
+    DSHOW_CAMERA_CONTROL_FLAGS_AUTO = 0x0001
+    DSHOW_CAMERA_CONTROL_FLAGS_MANUAL = 0x0002
+
+    class _IBaseFilter(IUnknown):
+        # Only ever used as a QueryInterface waypoint to IAMVideoProcAmp /
+        # IAMCameraControl; its own methods are intentionally not declared
+        # since nothing here calls them.
+        _iid_ = GUID("{56A86895-0AD4-11CE-B03A-0020AF0BA770}")
+
+    class _IEnumMoniker(IUnknown):
+        _iid_ = GUID("{00000102-0000-0000-C000-000000000046}")
+        _methods_ = [
+            COMMETHOD([], _HRESULT, "Next",
+                      (["in"], _c_ulong, "celt"),
+                      (["out"], _POINTER(_POINTER(IUnknown)), "rgelt"),
+                      (["out"], _POINTER(_c_ulong), "pceltFetched")),
+        ]
+
+    class _IPersistStream(IPersist):
+        # IMoniker really derives IUnknown -> IPersist -> IPersistStream ->
+        # IMoniker. Skipping these two intermediate interfaces shifts every
+        # IMoniker vtable slot below (BindToObject/BindToStorage would land
+        # on IPersist::GetClassID's slot instead), so they must be declared
+        # even though nothing here calls them directly.
+        _iid_ = GUID("{00000109-0000-0000-C000-000000000046}")
+        _methods_ = [
+            COMMETHOD([], _HRESULT, "IsDirty"),
+            COMMETHOD([], _HRESULT, "Load", (["in"], _POINTER(IUnknown), "pstm")),
+            COMMETHOD([], _HRESULT, "Save", (["in"], _POINTER(IUnknown), "pstm"), (["in"], _c_int, "fClearDirty")),
+            COMMETHOD([], _HRESULT, "GetSizeMax", (["out"], _POINTER(_c_ulonglong), "pcbSize")),
+        ]
+
+    class _IMoniker(_IPersistStream):
+        _iid_ = GUID("{0000000f-0000-0000-C000-000000000046}")
+        _methods_ = [
+            COMMETHOD([], _HRESULT, "BindToObject",
+                      (["in"], _POINTER(IUnknown), "pbc"),
+                      (["in"], _POINTER(IUnknown), "pmkToLeft"),
+                      (["in"], _POINTER(GUID), "riid"),
+                      (["out"], _POINTER(_POINTER(IUnknown)), "ppvResult")),
+            COMMETHOD([], _HRESULT, "BindToStorage",
+                      (["in"], _POINTER(IUnknown), "pbc"),
+                      (["in"], _POINTER(IUnknown), "pmkToLeft"),
+                      (["in"], _POINTER(GUID), "riid"),
+                      (["out"], _POINTER(_POINTER(IUnknown)), "ppvObj")),
+        ]
+
+    class _ICreateDevEnum(IUnknown):
+        _iid_ = _IID_ICREATE_DEV_ENUM
+        _methods_ = [
+            COMMETHOD([], _HRESULT, "CreateClassEnumerator",
+                      (["in"], _POINTER(GUID), "clsidDeviceClass"),
+                      (["out"], _POINTER(_POINTER(_IEnumMoniker)), "ppEnumMoniker"),
+                      (["in"], _c_ulong, "dwFlags")),
+        ]
+
+    class _IAMCameraControl(IUnknown):
+        _iid_ = GUID("{C6E13370-30AC-11d0-A18C-00A0C9118956}")
+        _methods_ = [
+            COMMETHOD([], _HRESULT, "GetRange",
+                      (["in"], _c_long, "Property"),
+                      (["out"], _POINTER(_c_long), "pMin"),
+                      (["out"], _POINTER(_c_long), "pMax"),
+                      (["out"], _POINTER(_c_long), "pSteppingDelta"),
+                      (["out"], _POINTER(_c_long), "pDefault"),
+                      (["out"], _POINTER(_c_long), "pCapsFlags")),
+            COMMETHOD([], _HRESULT, "Set",
+                      (["in"], _c_long, "Property"), (["in"], _c_long, "lValue"), (["in"], _c_long, "Flags")),
+            COMMETHOD([], _HRESULT, "Get",
+                      (["in"], _c_long, "Property"), (["out"], _POINTER(_c_long), "lValue"), (["out"], _POINTER(_c_long), "Flags")),
+        ]
+
+    # CAMERA_PROP_SPECS name -> (COM interface, property id, manual flag, auto flag)
+    #
+    # "brightness" is deliberately mapped to IAMCameraControl::Exposure, not
+    # IAMVideoProcAmp::Brightness. Measured on real hardware (Microsoft LifeCam
+    # Cinema): Set()/Get() on VideoProcAmp Brightness round-trips fine (the
+    # driver echoes back whatever value you write) but never changes a single
+    # captured pixel — mean frame brightness stayed ~25-28 across the full
+    # 30-255 range. GetRange() also reported capsFlags=0 (neither Auto nor
+    # Manual advertised), consistent with the property being an unwired
+    # legacy shim on this driver. CameraControl Exposure, by contrast, swung
+    # mean frame brightness from ~9 (min) to ~229 (max) - a real, dramatic
+    # effect - so it is used as the actual "brightness" control instead. This
+    # is a known quirk on many UVC webcams, not specific to one camera model.
+    _DSHOW_PROPERTY_MAP = {
+        "brightness": (_IAMCameraControl, DSHOW_CAMERA_CONTROL_EXPOSURE, DSHOW_CAMERA_CONTROL_FLAGS_MANUAL, DSHOW_CAMERA_CONTROL_FLAGS_AUTO),
+        "focus": (_IAMCameraControl, DSHOW_CAMERA_CONTROL_FOCUS, DSHOW_CAMERA_CONTROL_FLAGS_MANUAL, DSHOW_CAMERA_CONTROL_FLAGS_AUTO),
+    }
+
+    def _dshow_create_bind_ctx():
+        ptr = _ctypes.c_void_p()
+        hr = _ctypes.windll.ole32.CreateBindCtx(0, _ctypes.byref(ptr))
+        if hr != 0 or not ptr:
+            raise OSError(f"CreateBindCtx failed hr={hr}")
+        return _ctypes.cast(ptr, _POINTER(IUnknown))
+
+    def _dshow_moniker_name(moniker, bind_ctx) -> str:
+        raw = moniker.BindToStorage(bind_ctx, None, IPropertyBag._iid_)
+        return raw.QueryInterface(IPropertyBag).Read("FriendlyName", pErrorLog=None)
+
+    def find_dshow_video_filter(descriptor_friendly_name: str, fallback_index: int):
+        """Enumerate DirectShow video-input monikers and bind the one matching
+        `descriptor_friendly_name` (preferred) or `fallback_index`
+        (positional fallback, since MSMF/DSHOW enumeration order can differ
+        from the app's own device_index in rare cases) to IBaseFilter.
+        Caller's thread must have called `comtypes.CoInitialize()` first."""
+        bind_ctx = _dshow_create_bind_ctx()
+        dev_enum = CoCreateInstance(_CLSID_SYSTEM_DEVICE_ENUM, interface=_ICreateDevEnum)
+        enum_moniker = dev_enum.CreateClassEnumerator(_CLSID_VIDEO_INPUT_DEVICE_CATEGORY, 0)
+        if not enum_moniker:
+            return None
+        candidates = []
+        while True:
+            moniker, fetched = enum_moniker.Next(1)
+            if fetched == 0 or moniker is None:
+                break
+            moniker = moniker.QueryInterface(_IMoniker)
+            try:
+                name = _dshow_moniker_name(moniker, bind_ctx)
+            except Exception:
+                name = ""
+            candidates.append((moniker, name))
+        target_moniker = None
+        if descriptor_friendly_name:
+            for moniker, name in candidates:
+                if name and name.strip().lower() == descriptor_friendly_name.strip().lower():
+                    target_moniker = moniker
+                    break
+        if target_moniker is None and 0 <= fallback_index < len(candidates):
+            target_moniker = candidates[fallback_index][0]
+        if target_moniker is None:
+            return None
+        return target_moniker.BindToObject(bind_ctx, None, _IBaseFilter._iid_).QueryInterface(_IBaseFilter)
+
+    class DirectShowPropertyController:
+        """Per-device wrapper around IAMCameraControl / IAMVideoProcAmp.
+
+        Must only be used from the thread that created it (COM STA rules) -
+        in `CameraSession` that is always the preview thread."""
+
+        def __init__(self, base_filter):
+            self._base_filter = base_filter
+            self._interfaces: Dict[type, object] = {}
+
+        def _interface_for(self, name: str):
+            interface_cls = _DSHOW_PROPERTY_MAP[name][0]
+            if interface_cls not in self._interfaces:
+                self._interfaces[interface_cls] = self._base_filter.QueryInterface(interface_cls)
+            return self._interfaces[interface_cls]
+
+        def get_range(self, name: str):
+            prop_id = _DSHOW_PROPERTY_MAP[name][1]
+            return self._interface_for(name).GetRange(prop_id)
+
+        def set_manual(self, name: str, value: int) -> float:
+            _, prop_id, manual_flag, _ = _DSHOW_PROPERTY_MAP[name]
+            iface = self._interface_for(name)
+            iface.Set(prop_id, int(value), manual_flag)
+            reported, _flags = iface.Get(prop_id)
+            return float(reported)
+
+        def set_auto(self, name: str) -> None:
+            _, prop_id, _, auto_flag = _DSHOW_PROPERTY_MAP[name]
+            iface = self._interface_for(name)
+            current, _flags = iface.Get(prop_id)
+            iface.Set(prop_id, current, auto_flag)
 
 ACK_BYTES = bytes([0xC3, 0x0D, 0x0A])
 FRAME_STX = 0xC3
@@ -142,28 +358,39 @@ class _LoggerStream:
             line, self._buffer = self._buffer.split("\n", 1)
             line = line.rstrip("\r")
             if line:
-                self.logger.log(self.level, line)
+                self.logger.log(self.level, line, extra={"console": True})
         return len(message)
 
     def flush(self) -> None:
         line = self._buffer.rstrip("\r")
         self._buffer = ""
         if line:
-            self.logger.log(self.level, line)
+            self.logger.log(self.level, line, extra={"console": True})
 
 
-class _ConsoleOnceFilter(logging.Filter):
-    def __init__(self, prefixes: Tuple[str, ...]):
+class _ConsoleVisibilityFilter(logging.Filter):
+    """Console handler filter.
+
+    Only records explicitly marked ``console=True`` (interactive CLI output
+    via `_LoggerStream`, or a `LOGGER.*` call tagged `extra={"console": True}`)
+    reach the console. Everything else still reaches the file handler, which
+    has no filter attached. A small set of legacy prefixes keep their
+    original "print once per runtime" behavior for backward compatibility.
+    """
+
+    def __init__(self, once_prefixes: Tuple[str, ...]):
         super().__init__()
-        self.prefixes = prefixes
+        self.once_prefixes = once_prefixes
         self._seen: set[str] = set()
         self._lock = threading.Lock()
 
     def filter(self, record: logging.LogRecord) -> bool:
-        message = record.getMessage()
-        key = next((prefix for prefix in self.prefixes if message.startswith(prefix)), None)
-        if key is None:
+        if getattr(record, "console", False):
             return True
+        message = record.getMessage()
+        key = next((prefix for prefix in self.once_prefixes if message.startswith(prefix)), None)
+        if key is None:
+            return False
         with self._lock:
             if key in self._seen:
                 return False
@@ -197,7 +424,7 @@ def configure_runtime_logging(instance_id: str, grpc_port: int) -> Path:
     console_handler.setFormatter(formatter)
     console_handler.setLevel(logging.INFO)
     console_handler.addFilter(
-        _ConsoleOnceFilter(
+        _ConsoleVisibilityFilter(
             (
                 "grpc_connection_state_changed",
                 "grpc_heartbeat_request",
@@ -496,9 +723,10 @@ class CameraSession:
     READ_FAILURE_LOG_THRESHOLD = 3
     UNAVAILABLE_FRAME_TEXT = "NO SIGNAL"
     INITIAL_OPEN_WAIT_SEC = 1.5
+    PROP_COMMIT_DEBOUNCE_SEC = 0.4
     CAMERA_PROP_SPECS = [
-        {"name": "brightness", "cap_prop": cv2.CAP_PROP_BRIGHTNESS, "max": 100, "default": 50, "scale": 100.0, "offset": 0.0},
-        {"name": "focus", "cap_prop": cv2.CAP_PROP_FOCUS, "max": 255, "default": 0, "scale": 1.0, "offset": 0.0},
+        {"name": "brightness", "cap_prop": cv2.CAP_PROP_BRIGHTNESS, "max": 100, "default": 50, "scale": 100.0, "offset": 0.0, "auto_disable_prop": None},
+        {"name": "focus", "cap_prop": cv2.CAP_PROP_FOCUS, "max": 255, "default": 0, "scale": 1.0, "offset": 0.0, "auto_disable_prop": cv2.CAP_PROP_AUTOFOCUS},
     ]
 
     def __init__(
@@ -537,15 +765,21 @@ class CameraSession:
         self.read_failure_count = 0
         self.reconnecting_logged = False
         self.initial_open_event = threading.Event()
-        self.controls_window_name = f"{self.window_name}::controls"
-        self.controls_initialized = False
         self.controls_enabled = False
-        self.controls_close_requested = False
-        self.controls_reset_requested = False
         self.camera_prop_cache = {spec["name"]: int(spec["default"]) for spec in self.CAMERA_PROP_SPECS}
+        self.camera_prop_reported: Dict[str, float] = {}
+        self.camera_prop_ranges: Dict[str, Tuple[int, int]] = {}
+        self.camera_prop_native_defaults: Dict[str, int] = {}
         self._camera_prop_last_applied = dict(self.camera_prop_cache)
         self._camera_prop_user_modified = False
         self._camera_prop_modified_names: Set[str] = set()
+        self._camera_prop_pending_commit_at: Optional[float] = None
+        self._capture_reopen_requested = False
+        self._unavailable_logged = False
+        self._dshow_control: Optional["DirectShowPropertyController"] = None
+        self._dshow_available: Optional[bool] = None
+        self._panel_pending_values: Dict[str, int] = {}
+        self._panel_value_lock = threading.Lock()
 
     def start(self) -> None:
         with self.lock:
@@ -591,6 +825,11 @@ class CameraSession:
                 next_backend_name,
             )
 
+    def _request_capture_reopen(self) -> None:
+        """Ask the preview thread to release and reopen the capture on its next
+        iteration, instead of mutating a live capture from another thread."""
+        self._capture_reopen_requested = True
+
     def _open_capture(self):
         if self.descriptor.device_index < 0:
             raise CommandError("INVALID_ARGUMENT", f"device_index must be >= 0, got {self.descriptor.device_index}")
@@ -627,6 +866,7 @@ class CameraSession:
                     self.camera_id,
                     self.descriptor.device_index,
                     backend_name,
+                    extra={"console": True},
                 )
             else:
                 LOGGER.info(
@@ -634,6 +874,7 @@ class CameraSession:
                     self.camera_id,
                     self.descriptor.device_index,
                     backend_name,
+                    extra={"console": True},
                 )
             return capture
 
@@ -656,16 +897,27 @@ class CameraSession:
         try:
             while not self.stop_event.is_set():
                 if not self.descriptor.connected or self.descriptor.device_index < 0:
-                    LOGGER.warning(
-                        "camera_unavailable camera_id=%s device_index=%s connected=%s",
-                        self.camera_id,
-                        self.descriptor.device_index,
-                        self.descriptor.connected,
-                    )
+                    if not self._unavailable_logged:
+                        LOGGER.warning(
+                            "camera_unavailable camera_id=%s device_index=%s connected=%s",
+                            self.camera_id,
+                            self.descriptor.device_index,
+                            self.descriptor.connected,
+                            extra={"console": True},
+                        )
+                        self._unavailable_logged = True
                     self._set_unavailable_state()
                     self._show_unavailable_frame()
                     time.sleep(0.2)
                     continue
+                self._unavailable_logged = False
+
+                if self._capture_reopen_requested:
+                    if self.capture is not None:
+                        self.capture.release()
+                        self.capture = None
+                        self.opened = False
+                    self._capture_reopen_requested = False
 
                 if self.capture is None or not self.capture.isOpened():
                     try:
@@ -676,12 +928,13 @@ class CameraSession:
                             self.camera_id,
                             exc.code,
                             exc.message,
+                            extra={"console": True},
                         )
                         self.open_retry_exhausted = True
                         self.opened = False
                         break
                     except Exception as exc:
-                        LOGGER.exception("camera_open_exception camera_id=%s", self.camera_id)
+                        LOGGER.exception("camera_open_exception camera_id=%s", self.camera_id, extra={"console": True})
                         self.open_retry_exhausted = True
                         self.opened = False
                         break
@@ -709,9 +962,9 @@ class CameraSession:
                     self.open_retry_count = 0
                     self.open_retry_exhausted = False
                     if self.reconnecting_logged:
-                        LOGGER.info("camera_preview_recovered camera_id=%s", self.camera_id)
+                        LOGGER.info("camera_preview_recovered camera_id=%s", self.camera_id, extra={"console": True})
                     else:
-                        LOGGER.info("camera_preview_opened camera_id=%s", self.camera_id)
+                        LOGGER.info("camera_preview_opened camera_id=%s", self.camera_id, extra={"console": True})
                     self.read_failure_count = 0
                     self.reconnecting_logged = False
                     self.initial_open_event.set()
@@ -727,6 +980,7 @@ class CameraSession:
                             self.camera_id,
                             self.active_backend_name or "unknown",
                             self.read_failure_count,
+                            extra={"console": True},
                         )
                         self.reconnecting_logged = True
                     if self.capture is not None:
@@ -749,7 +1003,7 @@ class CameraSession:
                     cv2.imshow(self.window_name, frame)
                     key = cv2.waitKey(1) & 0xFF
                 except cv2.error as exc:
-                    LOGGER.exception("camera_window_error camera_id=%s", self.camera_id)
+                    LOGGER.exception("camera_window_error camera_id=%s", self.camera_id, extra={"console": True})
                     self.stop_event.set()
                     break
 
@@ -818,8 +1072,106 @@ class CameraSession:
             cv2.imshow(self.window_name, frame)
             cv2.waitKey(1)
         except cv2.error as exc:
-            LOGGER.exception("camera_unavailable_window_error camera_id=%s", self.camera_id)
+            LOGGER.exception("camera_unavailable_window_error camera_id=%s", self.camera_id, extra={"console": True})
             self.stop_event.set()
+
+    def _ensure_dshow_control(self) -> bool:
+        """Lazily bind this session's device to native DirectShow property
+        control. Must only be called from the preview thread (COM STA rules;
+        the resulting controller is only ever used on that same thread)."""
+        if self._dshow_available is not None:
+            return self._dshow_available
+        if not _DSHOW_CONTROL_AVAILABLE:
+            self._dshow_available = False
+            return False
+        try:
+            comtypes.CoInitialize()
+            base_filter = find_dshow_video_filter(self.descriptor.friendly_name, self.descriptor.device_index)
+            if base_filter is None:
+                raise RuntimeError("no matching DirectShow video input device found")
+            controller = DirectShowPropertyController(base_filter)
+            for spec in self.CAMERA_PROP_SPECS:
+                name = spec["name"]
+                range_min, range_max, _step, default, _caps = controller.get_range(name)
+                self.camera_prop_ranges[name] = (int(range_min), int(range_max))
+                self.camera_prop_native_defaults[name] = int(default)
+                # CAMERA_PROP_SPECS["default"] is a static placeholder tuned
+                # for the old 0-100/0-255 OpenCV ranges (e.g. brightness=50);
+                # it is meaningless once the real native range is known (e.g.
+                # exposure -11..1) and would otherwise make the slider open
+                # sitting at the wrong position. Only seed it in if the user
+                # has not already changed this property.
+                if name not in self._camera_prop_modified_names:
+                    self.camera_prop_cache[name] = int(default)
+            self._dshow_control = controller
+            self._dshow_available = True
+            LOGGER.info(
+                "camera_native_control_available camera_id=%s friendly_name=%s",
+                self.camera_id,
+                self.descriptor.friendly_name,
+                extra={"console": True},
+            )
+        except Exception as exc:
+            self._dshow_control = None
+            self._dshow_available = False
+            LOGGER.warning(
+                "camera_native_control_unavailable camera_id=%s reason=%s falling_back_to_opencv=true",
+                self.camera_id,
+                exc,
+                extra={"console": True},
+            )
+        return self._dshow_available
+
+    def _apply_camera_property_native(self, spec: Dict[str, object], raw: int) -> bool:
+        # Unlike the OpenCV fallback, `raw` here is already in the DirectShow
+        # property's native units (it came from a slider ranged with
+        # `camera_prop_ranges`, i.e. real `GetRange()` values) - it must be
+        # passed straight through. Do NOT apply `spec["scale"]`/`["offset"]`:
+        # those only exist to normalize into OpenCV's 0.0-1.0 CAP_PROP range
+        # and previously crushed every native value (e.g. exposure -11..1
+        # divided by scale=100) down to 0, so brightness looked "stuck".
+        name = spec["name"]
+        try:
+            reported = self._dshow_control.set_manual(name, raw)
+            self.camera_prop_reported[name] = reported
+            LOGGER.info(
+                "camera_property_apply camera_id=%s name=%s backend=dshow raw=%s reported=%s",
+                self.camera_id,
+                name,
+                raw,
+                reported,
+            )
+            return True
+        except Exception:
+            LOGGER.exception(
+                "camera_property_apply_native_failed camera_id=%s name=%s falling_back_to_opencv=true",
+                self.camera_id,
+                name,
+                extra={"console": True},
+            )
+            return False
+
+    def _apply_camera_property_opencv(self, capture, spec: Dict[str, object], raw: int) -> None:
+        name = spec["name"]
+        value = raw / float(spec["scale"]) + float(spec["offset"])
+        try:
+            auto_disable_prop = spec.get("auto_disable_prop")
+            if auto_disable_prop is not None:
+                capture.set(auto_disable_prop, 0)
+            applied = capture.set(spec["cap_prop"], float(value))
+            reported = capture.get(spec["cap_prop"])
+            self.camera_prop_reported[name] = reported
+            LOGGER.info(
+                "camera_property_apply camera_id=%s name=%s backend=opencv raw=%s value=%s applied=%s reported=%s",
+                self.camera_id,
+                name,
+                raw,
+                value,
+                applied,
+                reported,
+            )
+        except Exception:
+            LOGGER.exception("camera_property_apply_failed camera_id=%s name=%s", self.camera_id, name, extra={"console": True})
 
     def _apply_camera_properties(self, capture, force: bool = False) -> None:
         for spec in self.CAMERA_PROP_SPECS:
@@ -829,73 +1181,37 @@ class CameraSession:
                 continue
             if not force and self._camera_prop_last_applied.get(name) == current_raw:
                 continue
-            value = current_raw / float(spec["scale"]) + float(spec["offset"])
-            try:
-                applied = capture.set(spec["cap_prop"], float(value))
-                reported = capture.get(spec["cap_prop"])
-                LOGGER.info(
-                    "camera_property_apply camera_id=%s name=%s raw=%s value=%s applied=%s reported=%s",
-                    self.camera_id,
-                    name,
-                    current_raw,
-                    value,
-                    applied,
-                    reported,
-                )
-            except Exception:
-                LOGGER.exception("camera_property_apply_failed camera_id=%s name=%s", self.camera_id, name)
+            applied_native = self._ensure_dshow_control() and self._apply_camera_property_native(spec, current_raw)
+            if not applied_native:
+                self._apply_camera_property_opencv(capture, spec, current_raw)
             self._camera_prop_last_applied[name] = current_raw
 
-    @staticmethod
-    def _noop_trackbar(_value: int) -> None:
-        return
-
-    def _request_controls_reset(self, *_args) -> None:
-        self.controls_reset_requested = True
-
-    def _init_controls_window(self) -> None:
-        if self.controls_initialized:
+    def request_property_value(self, name: str, raw_value: int) -> None:
+        """Thread-safe entry point for the controls UI (any thread) to report
+        a user-driven slider change. Picked up by `_sync_controls_with_camera()`
+        on the preview thread, which owns `capture`/`_dshow_control`."""
+        if not self.controls_enabled:
             return
-        cv2.namedWindow(self.controls_window_name, cv2.WINDOW_NORMAL)
-        cv2.createTrackbar("reset_defaults", self.controls_window_name, 0, 1, self._noop_trackbar)
-        try:
-            cv2.createButton("reset_defaults", self._request_controls_reset, None, cv2.QT_PUSH_BUTTON, 0)
-        except (AttributeError, cv2.error):
-            pass
-        for spec in self.CAMERA_PROP_SPECS:
-            cv2.createTrackbar(
-                spec["name"],
-                self.controls_window_name,
-                int(self.camera_prop_cache.get(spec["name"], spec["default"])),
-                int(spec["max"]),
-                self._noop_trackbar,
-            )
-        self.controls_initialized = True
-        LOGGER.info("camera_controls_initialized camera_id=%s", self.camera_id)
+        with self._panel_value_lock:
+            self._panel_pending_values[name] = int(raw_value)
 
     def _reset_controls_to_driver_defaults(self) -> None:
         for spec in self.CAMERA_PROP_SPECS:
-            self.camera_prop_cache[spec["name"]] = int(spec["default"])
-            if self.controls_initialized:
-                try:
-                    cv2.setTrackbarPos(spec["name"], self.controls_window_name, int(spec["default"]))
-                except cv2.error:
-                    pass
-        if self.controls_initialized:
-            try:
-                cv2.setTrackbarPos("reset_defaults", self.controls_window_name, 0)
-            except cv2.error:
-                pass
+            name = spec["name"]
+            self.camera_prop_cache[name] = self.camera_prop_native_defaults.get(name, int(spec["default"]))
         self._camera_prop_modified_names.clear()
         self._camera_prop_user_modified = False
         self._camera_prop_last_applied = dict(self.camera_prop_cache)
+        self._camera_prop_pending_commit_at = None
+        self.camera_prop_reported = {}
+        with self._panel_value_lock:
+            self._panel_pending_values.clear()
         if self.capture is not None:
             self.capture.release()
             self.capture = None
         self.opened = False
         self.latest_frame = None
-        self.controls_reset_requested = False
-        LOGGER.warning("camera_controls_reset_to_driver_defaults camera_id=%s", self.camera_id)
+        LOGGER.warning("camera_controls_reset_to_driver_defaults camera_id=%s", self.camera_id, extra={"console": True})
 
     def reset_camera_properties(self) -> Dict[str, object]:
         with acquired_lock(
@@ -909,63 +1225,65 @@ class CameraSession:
                 "camera_id": self.camera_id,
                 "reset_to_driver_defaults": True,
                 "properties": dict(self.camera_prop_cache),
+                "properties_reported": dict(self.camera_prop_reported),
             }
 
     def _sync_controls_with_camera(self) -> None:
-        if self.controls_close_requested:
-            try:
-                cv2.destroyWindow(self.controls_window_name)
-            except cv2.error:
-                pass
-            self.controls_initialized = False
-            self.controls_close_requested = False
-            LOGGER.info("camera_controls_closed camera_id=%s", self.camera_id)
-            return
         if not self.controls_enabled:
             return
         if self.capture is None or not self.capture.isOpened():
             return
-        try:
-            self._init_controls_window()
-        except cv2.error:
-            LOGGER.exception("camera_controls_init_failed camera_id=%s", self.camera_id)
-            return
+        # Probe native control as soon as the panel is open (not only once a
+        # value changes) so `camera_prop_ranges` is populated promptly for
+        # the controls UI to read real hardware-reported slider bounds.
+        self._ensure_dshow_control()
+
+        with self._panel_value_lock:
+            pending = dict(self._panel_pending_values)
+            self._panel_pending_values.clear()
         changed = False
-        try:
-            reset_raw = cv2.getTrackbarPos("reset_defaults", self.controls_window_name)
-        except cv2.error:
-            reset_raw = 0
-        if self.controls_reset_requested or reset_raw == 1:
-            self._reset_controls_to_driver_defaults()
-            return
         for spec in self.CAMERA_PROP_SPECS:
-            try:
-                if cv2.getWindowProperty(self.controls_window_name, cv2.WND_PROP_VISIBLE) < 1:
-                    self.controls_enabled = False
-                    self.controls_initialized = False
-                    LOGGER.info("camera_controls_closed camera_id=%s", self.camera_id)
-                    return
-                raw = cv2.getTrackbarPos(spec["name"], self.controls_window_name)
-            except cv2.error:
-                self.controls_enabled = False
-                self.controls_initialized = False
-                LOGGER.info("camera_controls_closed camera_id=%s name=%s", self.camera_id, spec["name"])
-                return
-            old_raw = int(self.camera_prop_cache.get(spec["name"], spec["default"]))
+            name = spec["name"]
+            if name not in pending:
+                continue
+            raw = pending[name]
+            old_raw = int(self.camera_prop_cache.get(name, spec["default"]))
             if raw != old_raw:
-                self.camera_prop_cache[spec["name"]] = int(raw)
+                self.camera_prop_cache[name] = int(raw)
                 self._camera_prop_user_modified = True
-                self._camera_prop_modified_names.add(spec["name"])
+                self._camera_prop_modified_names.add(name)
                 changed = True
                 LOGGER.info(
                     "camera_property_changed camera_id=%s name=%s old_raw=%s new_raw=%s",
                     self.camera_id,
-                    spec["name"],
+                    name,
                     old_raw,
                     raw,
                 )
-        if changed:
+        if changed and self._ensure_dshow_control():
+            # Native DirectShow control is a lightweight COM call, not a
+            # capture teardown: apply immediately, no debounce/reopen needed.
+            self._camera_prop_pending_commit_at = None
             self._apply_camera_properties(self.capture, force=False)
+        elif changed:
+            # OpenCV fallback: live capture.set() on a running preview stream
+            # is unreliable across backends/drivers. Debounce so a slider drag
+            # doesn't reopen the capture on every tick, then commit via
+            # release+reopen (same path as reset/`apply_config`) so the driver
+            # actually applies the value.
+            self._camera_prop_pending_commit_at = time.time() + self.PROP_COMMIT_DEBOUNCE_SEC
+        elif (
+            self._camera_prop_pending_commit_at is not None
+            and time.time() >= self._camera_prop_pending_commit_at
+        ):
+            self._camera_prop_pending_commit_at = None
+            LOGGER.info(
+                "camera_property_committed camera_id=%s properties=%s",
+                self.camera_id,
+                dict(self.camera_prop_cache),
+                extra={"console": True},
+            )
+            self._request_capture_reopen()
 
     def open_controls_panel(self) -> Dict[str, object]:
         with acquired_lock(
@@ -977,13 +1295,13 @@ class CameraSession:
             if self.capture is None or not self.capture.isOpened():
                 raise CommandError("NO_FRAME_YET", f"{self.camera_id} is not opened yet")
             self.controls_enabled = True
-            self.controls_close_requested = False
             return {
                 "camera_id": self.camera_id,
                 "controls_panel_open": True,
-                "window_name": self.controls_window_name,
-                "message": "controls panel will open on the camera preview thread",
+                "message": "controls panel opening",
                 "properties": dict(self.camera_prop_cache),
+                "properties_reported": dict(self.camera_prop_reported),
+                "properties_ranges": dict(self.camera_prop_ranges),
             }
 
     def close_controls_panel(self) -> Dict[str, object]:
@@ -994,12 +1312,12 @@ class CameraSession:
             f"{self.camera_id} is busy recovering hardware state",
         ):
             self.controls_enabled = False
-            self.controls_close_requested = True
+            with self._panel_value_lock:
+                self._panel_pending_values.clear()
             return {
                 "camera_id": self.camera_id,
                 "controls_panel_open": False,
-                "window_name": self.controls_window_name,
-                "message": "controls panel will close on the camera preview thread",
+                "message": "controls panel closed",
             }
 
     def stop(self) -> None:
@@ -1027,11 +1345,6 @@ class CameraSession:
             cv2.destroyWindow(self.window_name)
         except cv2.error:
             pass
-        try:
-            cv2.destroyWindow(self.controls_window_name)
-        except cv2.error:
-            pass
-        self.controls_initialized = False
         self.controls_enabled = False
 
     def update_output_root(self, output_root: Path) -> None:
@@ -1060,7 +1373,8 @@ class CameraSession:
             self.backend_index = 0
             self.active_backend_name = ""
             self.initial_open_event.clear()
-            self.controls_initialized = False
+            self._dshow_available = None
+            self._dshow_control = None
         finally:
             self.lock.release()
         LOGGER.warning(
@@ -1103,7 +1417,8 @@ class CameraSession:
                     self.capture = None
                 self.opened = False
                 self.latest_frame = None
-                self.controls_initialized = False
+                self._dshow_available = None
+                self._dshow_control = None
         finally:
             self.lock.release()
         if device_changed:
@@ -1215,6 +1530,8 @@ class CameraSession:
             minimum = 0 if key == "max_folder_size_gb" else 1
             validated[key] = coerce_int(value, key, min_value=minimum)
 
+        capture_affecting = {"width", "height", "fps"}
+        needs_reopen = bool(capture_affecting & validated.keys())
         with acquired_lock(
             self.lock,
             SESSION_LOCK_TIMEOUT_SEC,
@@ -1223,11 +1540,12 @@ class CameraSession:
         ):
             for key, value in validated.items():
                 setattr(self.config, key, value)
-            if self.capture is not None:
-                self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.width)
-                self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.height)
-                self.capture.set(cv2.CAP_PROP_FPS, self.config.fps)
-        LOGGER.info("camera_config_updated camera_id=%s values=%s", self.camera_id, validated)
+            # Never mutate a live `self.capture` from this thread: the preview
+            # thread owns it and may be mid-`read()`. Ask it to release and
+            # reopen with the new config instead (same pattern as reset).
+            if needs_reopen and self.capture is not None:
+                self._request_capture_reopen()
+        LOGGER.info("camera_config_updated camera_id=%s values=%s", self.camera_id, validated, extra={"console": True})
 
     def status(self) -> Dict[str, object]:
         with acquired_lock(
@@ -1250,8 +1568,184 @@ class CameraSession:
                 "recording_duration": self.config.recording_duration,
                 "max_folder_size_gb": self.config.max_folder_size_gb,
                 "camera_properties": dict(self.camera_prop_cache),
+                "camera_properties_reported": dict(self.camera_prop_reported),
+                "camera_properties_ranges": dict(self.camera_prop_ranges),
                 "controls_panel_open": self.controls_enabled,
             }
+
+
+class CameraControlsUI:
+    """Tk-based controls panel, replacing the old cv2 trackbar window.
+
+    Owns a single process-wide Tk root/mainloop on its own daemon thread.
+    Tkinter widgets may only be touched from that thread, so every other
+    thread talks to it exclusively through `_queue` (never calls Tk APIs
+    directly), and the Tk thread talks back to `CameraSession` only through
+    methods that are already documented as thread-safe on their own
+    (`request_property_value()`, `reset_camera_properties()`,
+    `close_controls_panel()`).
+    """
+
+    REFRESH_INTERVAL_MS = 200
+    QUEUE_POLL_INTERVAL_MS = 50
+
+    def __init__(self) -> None:
+        self._queue: "queue.Queue[Tuple[str, object]]" = queue.Queue()
+        self._thread: Optional[threading.Thread] = None
+        self._root = None
+        self._panels: Dict[str, object] = {}
+        self._ready_event = threading.Event()
+
+    def start(self) -> None:
+        if self._thread is not None:
+            return
+        self._thread = threading.Thread(target=self._run, name="camera-controls-ui", daemon=True)
+        self._thread.start()
+        self._ready_event.wait(timeout=5)
+
+    def stop(self) -> None:
+        if self._thread is None:
+            return
+        self._queue.put(("shutdown", None))
+        self._thread.join(timeout=3)
+
+    def open_panel(self, session: "CameraSession") -> None:
+        self._queue.put(("open", session))
+
+    def close_panel(self, camera_id: str) -> None:
+        self._queue.put(("close", camera_id))
+
+    # --- Tk thread only below this point -----------------------------
+
+    def _run(self) -> None:
+        import tkinter as tk
+
+        self._tk = tk
+        root = tk.Tk()
+        root.withdraw()
+        self._root = root
+        self._ready_event.set()
+        root.after(self.QUEUE_POLL_INTERVAL_MS, self._drain_queue)
+        root.mainloop()
+
+    def _drain_queue(self) -> None:
+        try:
+            while True:
+                action, payload = self._queue.get_nowait()
+                if action == "open":
+                    self._open_panel_on_tk_thread(payload)
+                elif action == "close":
+                    self._close_panel_on_tk_thread(payload)
+                elif action == "shutdown":
+                    for camera_id in list(self._panels):
+                        self._close_panel_on_tk_thread(camera_id)
+                    self._root.quit()
+                    return
+        except queue.Empty:
+            pass
+        self._root.after(self.QUEUE_POLL_INTERVAL_MS, self._drain_queue)
+
+    def _open_panel_on_tk_thread(self, session: "CameraSession") -> None:
+        tk = self._tk
+        camera_id = session.camera_id
+        existing = self._panels.get(camera_id)
+        if existing is not None:
+            existing["toplevel"].lift()
+            return
+
+        toplevel = tk.Toplevel(self._root)
+        toplevel.title(f"{camera_id} controls")
+
+        def handle_close() -> None:
+            session.close_controls_panel()
+            self._close_panel_on_tk_thread(camera_id)
+
+        toplevel.protocol("WM_DELETE_WINDOW", handle_close)
+
+        sliders: Dict[str, object] = {}
+        labels: Dict[str, object] = {}
+        for spec in session.CAMERA_PROP_SPECS:
+            name = spec["name"]
+            range_min, range_max = session.camera_prop_ranges.get(name, (0, int(spec["max"])))
+            row = tk.Frame(toplevel)
+            row.pack(fill="x", padx=8, pady=4)
+            tk.Label(row, text=name, width=12, anchor="w").pack(side="left")
+            label = tk.Label(row, text="", width=16, anchor="w")
+            label.pack(side="right")
+
+            def on_change(value, _name=name):
+                session.request_property_value(_name, int(float(value)))
+
+            # Create without `command` so the initial `.set()` below (and any
+            # later silent range/clamp correction) can never masquerade as a
+            # user-driven request; `command` is attached only afterward, so
+            # only real user drags reach `request_property_value()`.
+            scale = tk.Scale(
+                toplevel,
+                from_=range_min,
+                to=range_max,
+                orient="horizontal",
+                length=260,
+            )
+            scale.set(int(session.camera_prop_cache.get(name, spec["default"])))
+            scale.config(command=on_change)
+            scale.pack(fill="x", padx=8)
+            sliders[name] = scale
+            labels[name] = label
+
+        def handle_reset() -> None:
+            session.reset_camera_properties()
+            for spec in session.CAMERA_PROP_SPECS:
+                name = spec["name"]
+                scale = sliders[name]
+                cmd = scale["command"]
+                scale["command"] = ""
+                scale.set(int(spec["default"]))
+                scale["command"] = cmd
+
+        button_row = tk.Frame(toplevel)
+        button_row.pack(fill="x", padx=8, pady=8)
+        tk.Button(button_row, text="Reset to driver defaults", command=handle_reset).pack(side="left")
+        tk.Button(button_row, text="Close", command=handle_close).pack(side="right")
+
+        panel = {"toplevel": toplevel, "sliders": sliders, "labels": labels}
+        self._panels[camera_id] = panel
+        self._refresh_panel(session, camera_id)
+
+    def _refresh_panel(self, session: "CameraSession", camera_id: str) -> None:
+        panel = self._panels.get(camera_id)
+        if panel is None:
+            return
+        for spec in session.CAMERA_PROP_SPECS:
+            name = spec["name"]
+            range_min, range_max = session.camera_prop_ranges.get(name, (0, int(spec["max"])))
+            requested_raw = int(session.camera_prop_cache.get(name, spec["default"]))
+            requested_display = min(range_max, max(range_min, requested_raw))
+            reported = session.camera_prop_reported.get(name)
+            reported_text = f"{reported:.1f}" if isinstance(reported, (int, float)) else "-"
+            panel["labels"][name].config(text=f"req={requested_display}  actual={reported_text}")
+            scale = panel["sliders"][name]
+            if (float(scale.cget("from")), float(scale.cget("to"))) != (float(range_min), float(range_max)):
+                # Reconfiguring `from_`/`to` on a Tk Scale silently clamps an
+                # out-of-range current value AND fires `command` as a side
+                # effect - detach it first so a range correction (e.g. the
+                # static 0-100 fallback getting replaced by the real
+                # hardware range once probed) never gets applied to the
+                # camera as if the user had dragged the slider.
+                cmd = scale["command"]
+                scale["command"] = ""
+                scale.config(from_=range_min, to=range_max)
+                scale.set(requested_display)
+                scale["command"] = cmd
+        self._root.after(self.REFRESH_INTERVAL_MS, self._refresh_panel, session, camera_id)
+
+    def _close_panel_on_tk_thread(self, camera_id: str) -> None:
+        panel = self._panels.pop(camera_id, None)
+        if panel is not None:
+            try:
+                panel["toplevel"].destroy()
+            except Exception:
+                pass
 
 
 class CameraManager:
@@ -1272,6 +1766,7 @@ class CameraManager:
         config: CameraConfig,
         output_dir: Path,
         map_path: Path,
+        controls_ui: "CameraControlsUI",
         allowed_device_indexes: Optional[List[int]] = None,
         runtime_title: str = "",
         file_tag: str = "",
@@ -1279,6 +1774,7 @@ class CameraManager:
         self.default_config = config
         self.output_dir = output_dir
         self.map_path = map_path
+        self.controls_ui = controls_ui
         self.allowed_device_indexes = set(allowed_device_indexes) if allowed_device_indexes else None
         self.runtime_title = runtime_title
         self.file_tag = file_tag
@@ -1508,16 +2004,21 @@ class CameraManager:
 
     @staticmethod
     def _windows_device_signature(devices: List[Dict[str, str]]) -> Tuple[Tuple[str, str, str, str, str], ...]:
+        # Get-CimInstance does not guarantee stable ordering between polls, so
+        # sort the signature to avoid treating a reordered-but-unchanged
+        # device list as a real change.
         return tuple(
-            (
-                str(item.get("friendly_name", "") or ""),
-                str(item.get("device_id", "") or ""),
-                str(item.get("pnp_device_id", "") or ""),
-                str(item.get("location_information", "") or ""),
-                str(item.get("manufacturer", "") or ""),
+            sorted(
+                (
+                    str(item.get("friendly_name", "") or ""),
+                    str(item.get("device_id", "") or ""),
+                    str(item.get("pnp_device_id", "") or ""),
+                    str(item.get("location_information", "") or ""),
+                    str(item.get("manufacturer", "") or ""),
+                )
+                for item in devices
+                if isinstance(item, dict)
             )
-            for item in devices
-            if isinstance(item, dict)
         )
 
     def _query_windows_camera_devices(self) -> List[Dict[str, str]]:
@@ -1590,6 +2091,7 @@ class CameraManager:
                         }
                         for d in normalized
                     ],
+                    extra={"console": True},
                 )
                 LOGGER.info("windows_device_query_success count=%s", len(normalized))
                 self._last_logged_windows_device_snapshot = snapshot
@@ -1774,7 +2276,7 @@ class CameraManager:
             LOGGER.info("camera_alias_config_saved aliases_changed=%s", aliases_changed)
 
         if changed:
-            LOGGER.warning("camera_discovery_changed forcing_session_reopen=%s", len(self.sessions))
+            LOGGER.warning("camera_discovery_changed forcing_session_reopen=%s", len(self.sessions), extra={"console": True})
             for session in self.sessions.values():
                 session.force_reopen()
 
@@ -1836,7 +2338,7 @@ class CameraManager:
         ):
             changed = self._refresh_discovery_locked(windows_devices)
             devices = self._list_devices_locked()
-        LOGGER.info("camera_rescan_completed changed=%s device_count=%s", changed, len(devices))
+        LOGGER.info("camera_rescan_completed changed=%s device_count=%s", changed, len(devices), extra={"console": bool(changed)})
         return {
             "changed": changed,
             "device_count": len(devices),
@@ -1916,6 +2418,7 @@ class CameraManager:
                     "camera_hotplug_change_detected windows_devices=%s descriptor_count_mismatch=%s",
                     len(windows_devices),
                     descriptor_count_mismatch,
+                    extra={"console": True},
                 )
                 if not self.lock.acquire(timeout=MANAGER_LOCK_TIMEOUT_SEC):
                     LOGGER.warning("camera_hotplug_refresh_skipped manager_busy=true")
@@ -1925,7 +2428,7 @@ class CameraManager:
                 finally:
                     self.lock.release()
             except Exception:
-                LOGGER.exception("camera_hotplug_refresh_failed")
+                LOGGER.exception("camera_hotplug_refresh_failed", extra={"console": True})
 
     def _start_hotplug_monitor(self) -> None:
         if self.hotplug_thread is not None and self.hotplug_thread.is_alive():
@@ -2151,6 +2654,7 @@ class CameraManager:
         if session is None:
             raise CommandError("CAMERA_NOT_FOUND", f"{camera_id} not found")
         session.stop()
+        self.controls_ui.close_panel(camera_id)
         LOGGER.info("camera_closed camera_id=%s", camera_id)
         return {"camera_id": camera_id, "closed": True}
 
@@ -2169,12 +2673,14 @@ class CameraManager:
     def open_camera_panel(self, camera_id: str) -> Dict[str, object]:
         session = self.get_session(camera_id)
         result = session.open_controls_panel()
+        self.controls_ui.open_panel(session)
         LOGGER.info("camera_controls_open_requested camera_id=%s", camera_id)
         return result
 
     def close_camera_panel(self, camera_id: str) -> Dict[str, object]:
         session = self.get_session(camera_id)
         result = session.close_controls_panel()
+        self.controls_ui.close_panel(camera_id)
         LOGGER.info("camera_controls_close_requested camera_id=%s", camera_id)
         return result
 
@@ -2373,7 +2879,8 @@ class CameraManager:
             cv2.destroyAllWindows()
         except cv2.error:
             pass
-        LOGGER.info("camera_manager_shutdown sessions=%s", len(sessions))
+        self.controls_ui.stop()
+        LOGGER.info("camera_manager_shutdown sessions=%s", len(sessions), extra={"console": True})
 
 
 class CommandRouter:
@@ -2390,7 +2897,7 @@ class CommandRouter:
         self.monitor_thread = threading.Thread(target=self._connection_monitor_loop, daemon=True)
         self.monitor_thread.start()
         self.camera_manager.set_shutdown_callback(self.shutdown)
-        LOGGER.info("command_router_initialized output_dir=%s", self.output_dir)
+        LOGGER.info("command_router_initialized output_dir=%s", self.output_dir, extra={"console": True})
 
     def validate_auth(self, token: str) -> None:
         if token != self.auth_token:
@@ -2419,7 +2926,7 @@ class CommandRouter:
     def shutdown(self) -> None:
         self.running = False
         self.camera_manager.shutdown()
-        LOGGER.info("command_router_shutdown")
+        LOGGER.info("command_router_shutdown", extra={"console": True})
 
     def execute(self, command: str, camera_id: str = "cam0", args: Optional[Dict[str, object]] = None, source: str = "cli") -> Dict[str, object]:
         args = args or {}
@@ -3009,7 +3516,7 @@ class GrpcServerController:
             if self.server is not None:
                 return
             self.server = self._create_server(self.port)
-            LOGGER.info("grpc_server_listening port=%s", self.port)
+            LOGGER.info("grpc_server_listening port=%s", self.port, extra={"console": True})
 
     def stop(self) -> None:
         with self.lock:
@@ -3054,7 +3561,7 @@ class GrpcServerController:
                 self.server.stop(0)
                 self.server = None
             self.server = self._create_server(self.port)
-            LOGGER.info("grpc_server_listening port=%s", self.port)
+            LOGGER.info("grpc_server_listening port=%s", self.port, extra={"console": True})
 
     def _restart_after_reply(self) -> None:
         time.sleep(0.2)
@@ -3096,9 +3603,9 @@ def main():
     instance_id = normalize_instance_id(opt.instance_id)
     grpc_port, defaulted_grpc_port = normalize_grpc_port(opt.grpc_port)
     log_path = configure_runtime_logging(instance_id, grpc_port)
-    LOGGER.info("logging_initialized path=%s", log_path)
+    LOGGER.info("logging_initialized path=%s", log_path, extra={"console": True})
     if not acquire_single_instance_lock(instance_id):
-        LOGGER.warning("another_runtime_instance_running instance_id=%s", instance_id)
+        LOGGER.warning("another_runtime_instance_running instance_id=%s", instance_id, extra={"console": True})
         return
 
     output_dir = Path(opt.save_path).resolve()
@@ -3112,6 +3619,7 @@ def main():
         runtime_version["version"],
         runtime_version["min_see_version"],
         runtime_version["min_supercarter_version"],
+        extra={"console": True},
     )
 
     camera_config = CameraConfig(
@@ -3126,21 +3634,25 @@ def main():
         raise RuntimeError("SuperEagleEye shared secret is missing. Launch from SEE, set SEE_SUPER_EAGLE_EYE_SECRET, or provide --auth_token.")
 
     if defaulted_grpc_port:
-        LOGGER.warning("invalid_grpc_port value=%s default_port=%s", opt.grpc_port, DEFAULT_GRPC_PORT)
+        LOGGER.warning("invalid_grpc_port value=%s default_port=%s", opt.grpc_port, DEFAULT_GRPC_PORT, extra={"console": True})
 
     allowed_device_indexes = parse_device_indexes(opt.device_indexes)
     if allowed_device_indexes is not None:
-        LOGGER.info("instance_device_indexes instance_id=%s device_indexes=%s", instance_id, allowed_device_indexes)
+        LOGGER.info("instance_device_indexes instance_id=%s device_indexes=%s", instance_id, allowed_device_indexes, extra={"console": True})
 
     runtime_title = format_runtime_title(instance_id, grpc_port, allowed_device_indexes, output_dir)
     runtime_file_tag = format_runtime_file_tag(grpc_port)
-    LOGGER.info("runtime_title %s", runtime_title)
-    LOGGER.info("runtime_startup output_dir=%s grpc_port=%s instance_id=%s", output_dir, grpc_port, instance_id)
+    LOGGER.info("runtime_title %s", runtime_title, extra={"console": True})
+    LOGGER.info("runtime_startup output_dir=%s grpc_port=%s instance_id=%s", output_dir, grpc_port, instance_id, extra={"console": True})
+
+    controls_ui = CameraControlsUI()
+    controls_ui.start()
 
     camera_manager = CameraManager(
         camera_config,
         output_dir,
         BASE_DIR / CAMERA_MAP_FILE_NAME,
+        controls_ui,
         allowed_device_indexes=allowed_device_indexes,
         runtime_title=runtime_title,
         file_tag=runtime_file_tag,
