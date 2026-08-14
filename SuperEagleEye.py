@@ -673,6 +673,18 @@ def file_timestamp_with_millis() -> str:
     return f"{time.strftime('%y%m%d_%H%M%S')}_{millis:03d}"
 
 
+def current_date_folder_name() -> str:
+    return time.strftime("%Y_%m_%d")
+
+
+def dated_output_dir(output_root: Path) -> Path:
+    return output_root / current_date_folder_name()
+
+
+def dated_output_path(output_path: Path) -> Path:
+    return output_path.parent / current_date_folder_name() / output_path.name
+
+
 class RecordingSession:
     def __init__(self, output_dir: Path, file_prefix: str, frame_size: Tuple[int, int], fps: int, duration_sec: int, file_tag: str = ""):
         self.output_dir = output_dir
@@ -689,11 +701,12 @@ class RecordingSession:
         self._open_writer()
 
     def _open_writer(self) -> None:
-        self.output_dir.mkdir(parents=True, exist_ok=True)
+        output_dir = dated_output_dir(self.output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
         self.segment_index += 1
         timestamp = file_timestamp_with_millis()
         file_tag = f"_{self.file_tag}" if self.file_tag else ""
-        path = self.output_dir / f"{timestamp}{file_tag}_{self.file_prefix}_{self.segment_index}.mp4"
+        path = output_dir / f"{timestamp}{file_tag}_{self.file_prefix}_{self.segment_index}.mp4"
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         self.writer = cv2.VideoWriter(str(path), fourcc, self.fps, self.frame_size)
         if self.writer is None or not self.writer.isOpened():
@@ -1456,7 +1469,7 @@ class CameraSession:
                 )
                 raise CommandError("NO_FRAME_YET", f"{self.camera_id} has no frame yet")
             frame = self.latest_frame.copy()
-        target = output_path or self._default_snapshot_path(command_name)
+        target = dated_output_path(output_path) if output_path else self._default_snapshot_path(command_name)
         target.parent.mkdir(parents=True, exist_ok=True)
         ok = cv2.imwrite(str(target), frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
         if not ok:
@@ -1468,7 +1481,7 @@ class CameraSession:
         timestamp = file_timestamp_with_millis()
         safe_command_name = self._sanitize_file_component(command_name or self.camera_id or "SNAPSHOT")
         file_tag = f"_{self.file_tag}" if self.file_tag else ""
-        return self.output_root / f"{timestamp}{file_tag}_{safe_command_name}.jpg"
+        return dated_output_dir(self.output_root) / f"{timestamp}{file_tag}_{safe_command_name}.jpg"
 
     @staticmethod
     def _sanitize_file_component(value: str) -> str:
@@ -3079,7 +3092,7 @@ class CommandRouter:
             resolved = self.camera_manager.set_output_dir(Path(raw_output_dir))
             return {"output_dir": str(resolved)}
         if command == "OPEN_OUTPUT_FOLDER":
-            output_dir = self.camera_manager.output_dir.resolve()
+            output_dir = dated_output_dir(self.camera_manager.output_dir.resolve())
             output_dir.mkdir(parents=True, exist_ok=True)
             opened = False
             if source.lower() == "cli":
@@ -3134,6 +3147,7 @@ class CommandRouter:
             "paths": {
                 "base_dir": str(BASE_DIR),
                 "output_dir": str(self.camera_manager.output_dir.resolve()),
+                "current_output_dir": str(dated_output_dir(self.camera_manager.output_dir.resolve())),
                 "log_dir": str(get_runtime_log_dir().resolve()),
                 "camera_map": str((BASE_DIR / CAMERA_MAP_FILE_NAME).resolve()),
                 "version_file": str((BASE_DIR / VERSION_FILE_NAME).resolve()),
@@ -3419,6 +3433,10 @@ def print_cli_help() -> None:
         ("close <camera_id>", "Close a camera preview window."),
         ("swap <camera_id_a> <camera_id_b>", "Swap the hardware bindings behind two logical camera ids. Alias: change"),
         ("record_start [camera_id] [duration_sec]", "Start recording. Defaults: cam0, 60"),
+        (
+            "record_start docs",
+            "Detailed START_RECORD notes: https://quan821223.github.io/Doc-SuperCarter/see10-supplemental-notes/#start_record",
+        ),
         ("record_stop [camera_id]", "Stop recording. Default: cam0"),
         (
             "set <camera_id> key=value ...",
