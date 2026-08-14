@@ -1,0 +1,18 @@
+[project]
+name = "super-eagle-eye"
+version = "1.3.2"
+description = "SuperEagleEye SEE_1.0 camera runtime"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "comtypes==1.4.16",
+    "grpcio==1.78.0",
+    "grpcio-tools==1.78.0",
+    "numpy==2.4.3",
+    "opencv-python==4.13.0.92",
+    "protobuf==6.33.6",
+    "pyinstaller==6.19.0",
+]
+
+[tool.uv]
+package = false

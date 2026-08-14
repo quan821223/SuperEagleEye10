@@ -15,6 +15,24 @@
 
 ---
 
+# [1.3.2] - 2026-08-14
+
+**新增**
+
+* feat(Build): 新增 `pyproject.toml`，用 uv 管理 Python 3.12 建置環境與直接依賴版本
+* feat(Build): 新增並提交 `uv.lock`，固定 PyInstaller、OpenCV、gRPC、protobuf、comtypes、numpy 與其解析後的相依套件版本
+
+**修復**
+
+**調整**
+
+* refactor(Build): `build_SuperEagleEye.ps1` 改為先執行 `py -3 -m uv sync --frozen`，再透過 `py -3 -m uv run pyinstaller` 打包，不再每次用 pip 安裝最新版套件
+* refactor(Build): 保留 `build_SuperEagleEye.bat` 作為既有 Windows 建置入口
+* docs(Build): 更新 `doc/packaging-deployment.md`，說明 uv lock、Python 版本限制、依賴鎖定策略與建置指令
+* version: SEE10 runtime 版本由 `1.3.1` 進版到 `1.3.2`
+
+---
+
 # [1.3.1] - 2026-08-14
 
 **新增**

@@ -24,10 +24,16 @@ $specPath = Join-Path $root "SuperEagleEye.spec"
 $publishRuntimeRoot = Join-Path $projectRoot "dist\SuperEagleEye_dist"
 $legacyToolsRuntimeRoot = Join-Path $projectRoot "tools\SuperEagleEye_dist"
 
+if (-not $env:UV_CACHE_DIR)
+{
+    $env:UV_CACHE_DIR = Join-Path $projectRoot ".uv-cache"
+}
+
 Push-Location $root
 
 Invoke-Step -Command { py -3 --version } -ErrorMessage "Python 3 is required but was not found by the Windows py launcher"
-Invoke-Step -Command { py -3 -m pip install pyinstaller opencv-python grpcio grpcio-tools protobuf comtypes } -ErrorMessage "Failed to install required Python packages"
+Invoke-Step -Command { py -3 -m uv --version } -ErrorMessage "uv is required but was not found. Install it with: py -3 -m pip install uv"
+Invoke-Step -Command { py -3 -m uv sync --frozen } -ErrorMessage "Failed to synchronize the locked Python environment"
 
 foreach ($path in @($buildRoot, $publishRuntimeRoot, $legacyToolsRuntimeRoot))
 {
@@ -43,7 +49,7 @@ if (Test-Path $specPath)
 }
 
 Invoke-Step -Command {
-    py -3 -m PyInstaller `
+    py -3 -m uv run pyinstaller `
       --noconfirm `
       --clean `
       --onedir `
