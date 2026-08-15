@@ -90,3 +90,31 @@ dist/
 # Environment Variables
 .env
 .env.*
+
+
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+.venv/
+venv/
+
+# uv
+.uv-cache/
+
+# Build Output
+build/
+dist/
+
+# Git Internal
+.git/
+
+# VS Code
+.vscode/
+
+# Environment Variables
+.env
+.env.*
