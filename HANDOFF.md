@@ -28,7 +28,7 @@ Current active work has focused on stabilizing camera hot-plug behavior, logical
 - `SuperCarter` acts as gRPC client and sends heartbeat
 - Cameras are mapped to logical IDs `cam0` through `cam9`
 - Operators are expected to use logical camera IDs instead of Windows device indexes
-- Published runtime is expected under `dist\SuperEagleEye\` and later included in `SuperCarter` publish output
+- Published runtime is expected under `dist\SuperEagleEye_v{version}_dist\` and packaged as `dist\SuperEagleEye_v{version}_dist.7z`
 
 Current runtime behavior under active development:
 
@@ -93,7 +93,7 @@ or
 
 Current packaging behavior:
 
-- output is copied to `dist\SuperEagleEye_dist`
+- output is copied to `dist\SuperEagleEye_v{version}_dist` and archived as `dist\SuperEagleEye_v{version}_dist.7z`
 
 Inspect repo state:
 
@@ -120,7 +120,7 @@ refresh_cameras
 - Added manual `refresh_cameras` / `refresh` CLI command
 - Updated CLI help and docs to mention the new command
 - Expanded `camera_map.json` to fixed `cam0`..`cam9` slots
-- Updated build scripts so packaging copies to `dist\SuperEagleEye_dist`
+- Updated build scripts so packaging copies to `dist\SuperEagleEye_v{version}_dist`, archives it as 7z, and keeps only `SuperEagleEye_v{version}.exe`
 - Added handoff documentation
 
 ## Known Issues / Current Risks
@@ -163,3 +163,4 @@ Use this as the starting prompt for the next session:
 ```text
 Read HANDOFF.md in camera_v2 first, then inspect git diff for README.md, README_user.md, SuperEagleEye.py, build_SuperEagleEye.ps1, build_SuperEagleEye.bat, and camera_map.json. Assume the repo is already dirty and do not revert unrelated changes. Focus first on the unresolved same-model dual-camera hot-plug bug where cam1 can still show cam0's image after unplug/replug even when list_devices reports distinct device_id values.
 ```
+

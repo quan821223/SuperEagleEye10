@@ -9,9 +9,17 @@
 
 **新增**
 
+* feat(Build): 打包後於 `dist` 第一層產生版本化 runtime 資料夾與 7z，例如 `SuperEagleEye_v1.3.2_dist` / `SuperEagleEye_v1.3.2_dist.7z`，且壓縮檔內最上層資料夾同樣使用版本化名稱
+* feat(Build): 新增 `py7zr` 建置依賴，讓 PowerShell build script 可直接產生 7z 封裝檔
+
 **修復**
 
+* fix(Build): 最終 runtime folder 與 7z 只保留 `SuperEagleEye_v{version}.exe`，移除無版本名的 `SuperEagleEye.exe` 複本
+
 **調整**
+
+* chore(Security): 移除已追蹤的舊 `dist/` 打包產物與 runtime log，並整理 `.gitignore` 以阻擋 build output、logs、archives、env files 與 local secret files
+* docs(Build): 更新 README、部署文件、handoff 與 packaging doc，對齊版本化 dist folder、版本化 exe、7z 封裝與 bat/ps1 工作流程
 
 ---
 
@@ -49,3 +57,4 @@
 **調整**
 
 * version: SEE10 runtime 版本由 `1.3.0` 進版到 `1.3.1`
+
