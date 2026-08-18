@@ -4,6 +4,10 @@
 
 描述 camera runtime 的資料模型與設定模型。
 
+## Source
+
+`see_runtime/camera_models.py`（`create_default_camera_map()` 則在 `see_runtime/cli.py`）
+
 ## Public Surface
 
 - `CameraConfig`

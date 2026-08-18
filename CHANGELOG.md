@@ -9,8 +9,19 @@
 
 **新增**
 
+**修復**
+
+**調整**
+
+---
+
+# [1.4.0] - 2026-08-18
+
+**新增**
+
 * feat(Build): 打包後於 `dist` 第一層產生版本化 runtime 資料夾與 7z，例如 `SuperEagleEye_v1.3.2_dist` / `SuperEagleEye_v1.3.2_dist.7z`，且壓縮檔內最上層資料夾同樣使用版本化名稱
 * feat(Build): 新增 `py7zr` 建置依賴，讓 PowerShell build script 可直接產生 7z 封裝檔
+* feat(CLI): `help` 新增 `help clients` 子指令，列出 SuperCarter / DDS 等外部控制端透過控制通道（`ExecuteCameraCommand` / `QueryCameraState`）可送給 `SEE_1.0` 的完整指令與查詢參考，跟本機終端機自己的指令表分開陳列
 
 **修復**
 
@@ -18,8 +29,11 @@
 
 **調整**
 
+* refactor(Runtime): 將 `SuperEagleEye.py`（原本單一檔案 3712 行）拆分為 `see_runtime/` 套件，依職責切成 16 個模組（`camera_session`、`camera_manager`、`command_router`、`grpc_service`、`cli` 等），`SuperEagleEye.py` 保留為約 140 行的進入點；不影響既有功能與對外行為，僅為程式碼結構調整。已實際跑過一次 PyInstaller 完整 build 確認新套件會被自動收錄，不需修改 `SuperEagleEye.spec`
 * chore(Security): 移除已追蹤的舊 `dist/` 打包產物與 runtime log，並整理 `.gitignore` 以阻擋 build output、logs、archives、env files 與 local secret files
 * docs(Build): 更新 README、部署文件、handoff 與 packaging doc，對齊版本化 dist folder、版本化 exe、7z 封裝與 bat/ps1 工作流程
+* docs(Design): 更新 `doc/detailed-design.md` 與各模組設計文件，補上對應的實際原始碼路徑（`see_runtime/*.py`）；更新 `doc/cli-interface.md` 說明新增的 `help clients` 子指令
+* version: SEE10 runtime 版本由 `1.3.2` 進版到 `1.4.0`
 
 ---
 

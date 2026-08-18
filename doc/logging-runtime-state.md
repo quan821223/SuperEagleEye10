@@ -4,6 +4,11 @@
 
 負責 runtime log、console stream redirect、crash log、diagnostic trace。
 
+## Source
+
+- `see_runtime/logging_setup.py`：`configure_runtime_logging()`、`_LoggerStream`
+- `see_runtime/runtime_paths.py`：`build_runtime_log_path()`、`get_runtime_log_dir()`、`write_crash_log()`、`pause_on_fatal_error()`
+
 ## Public Surface
 
 - `configure_runtime_logging()`

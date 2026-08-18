@@ -40,12 +40,13 @@
 - `build_SuperEagleEye.ps1` runs `py -3 -m uv sync --frozen` before packaging and then invokes PyInstaller through `py -3 -m uv run pyinstaller`.
 - If `UV_CACHE_DIR` is not already set, the build script points uv cache to `.uv-cache` under the project root. This avoids permission issues on locked-down Windows accounts and the folder is ignored by git.
 - `build_SuperEagleEye.bat` remains the stable Windows entry point and continues to call the PowerShell script.
-- Packaging output 會被複製到版本化 runtime folder，例如 `dist\SuperEagleEye_v1.3.2_dist`。
+- Packaging output 會被複製到版本化 runtime folder，例如 `dist\SuperEagleEye_v1.4.0_dist`。
 - Frozen runtime 的 `BASE_DIR` 以 executable folder 為準。
 - Logs 在 frozen executable 旁的 `logs` folder。
 - Runtime 啟動時仍會讀取 `camera_map.json` 與 `version.json`。
 - Packaging renames the PyInstaller executable from `SuperEagleEye.exe` to `SuperEagleEye_v{version}.exe`, where `{version}` is read from `version.json`. The unversioned executable is not kept in the final runtime folder or archive.
 - Packaging also creates a versioned 7z archive at `dist\SuperEagleEye_v{version}_dist.7z` through `py7zr` and removes the legacy unversioned `dist\SuperEagleEye_dist.7z` archive if it exists. The archive contains a versioned top-level folder named `SuperEagleEye_v{version}_dist`.
+- （v1.4.0）`SuperEagleEye.py` 的邏輯已拆分進 `see_runtime/` 套件（見 `doc/detailed-design.md` 的模組總覽）。PyInstaller 的 `Analysis(['SuperEagleEye.py'])` 會靜態追蹤 import 自動收錄 `see_runtime.*` 底下所有模組，不需要在 `SuperEagleEye.spec` 或 `--hiddenimports` 額外列出；這點已透過實際跑一次完整 build 並檢查 `build\SuperEagleEye\xref-SuperEagleEye.html` 確認過。
 
 ## Build Commands
 
@@ -61,22 +62,22 @@ Package the runtime:
 .\build_SuperEagleEye.bat
 ```
 
-Expected executable outputs under `dist\SuperEagleEye_v1.3.2_dist`:
+Expected executable outputs under `dist\SuperEagleEye_v1.4.0_dist`:
 
 ```text
-SuperEagleEye_v1.3.2.exe
+SuperEagleEye_v1.4.0.exe
 ```
 
 Expected archive output under `dist`:
 
 ```text
-SuperEagleEye_v1.3.2_dist.7z
+SuperEagleEye_v1.4.0_dist.7z
 ```
 
 Expected top-level folder inside the archive:
 
 ```text
-SuperEagleEye_v1.3.2_dist\
+SuperEagleEye_v1.4.0_dist\
 ```
 
 The PowerShell script performs the locked environment sync and PyInstaller build:
