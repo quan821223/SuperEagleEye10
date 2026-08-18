@@ -26,10 +26,10 @@ Current behavior:
 
 Current packaging flow:
 1. Run `build_SuperEagleEye.ps1` or `build_SuperEagleEye.bat`
-2. Packaging output is generated under `dist\SuperEagleEye\`
-3. Packaging refreshes `dist\SuperEagleEye_dist\`
-4. During `SuperCarter` publish, those files are included under `<publish>\dist\`
-5. Runtime resolution in WPF points to `<SuperCarter publish>\dist\SuperEagleEye.exe`
+2. PyInstaller first generates a temporary runtime under `build\__dist\SuperEagleEye\`
+3. The build renames `SuperEagleEye.exe` to `SuperEagleEye_v{version}.exe`
+4. Packaging refreshes `dist\SuperEagleEye_v{version}_dist\` and creates `dist\SuperEagleEye_v{version}_dist.7z`
+5. The versioned runtime folder and archive do not keep the unversioned `SuperEagleEye.exe` copy
 
 Build commands:
 
@@ -53,7 +53,7 @@ Current shared secret behavior:
 - shared secret file remains `%LOCALAPPDATA%\SEE\runtime\SuperEagleEye.secret`
 - legacy `config\SuperEagleEye.secret` is still migrated when present
 - manual startup can still pass `--auth_token`
-- runtime binary location moved to `dist`, but the auth token storage location did not change
+- runtime package location moved to the versioned `dist\SuperEagleEye_v{version}_dist` output, but the auth token storage location did not change
 
 ## CLI Startup Arguments
 
@@ -618,3 +618,4 @@ Recommended debugging order:
 
 > 1. **When two camera USB connections are placed on the same USB-HUB, black screen, stutter, frame drops, or stream-read failures are more likely to occur.**
 > 2. **Do not place camera USB connections and the SuperCarrier USB connection on the same USB-HUB.**
+
