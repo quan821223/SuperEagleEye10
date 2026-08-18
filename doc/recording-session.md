@@ -4,6 +4,10 @@
 
 負責單一 camera recording 的 video writer lifecycle 與分段錄影。
 
+## Source
+
+`see_runtime/camera_models.py`
+
 ## Public Surface
 
 - `RecordingSession`

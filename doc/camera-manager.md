@@ -4,6 +4,10 @@
 
 負責 camera discovery、logical slot assignment、hot-plug monitor、session ownership。
 
+## Source
+
+`see_runtime/camera_manager.py`
+
 ## Public Surface
 
 - `CameraManager.open_camera()`

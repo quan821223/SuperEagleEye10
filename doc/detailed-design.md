@@ -2,7 +2,7 @@
 
 ## 設計原則
 
-- 以目前 `SuperEagleEye.py` 的實際責任邊界切分模組。
+- 以下方模組總覽的責任邊界切分模組；自 v1.4.0 起，這個切分不再只是文件上的概念，`see_runtime/` 套件底下每個模組都對應到實際的 `.py` 檔案（見下表的「原始碼」欄）。
 - 模組間以清楚的 Python object / method contract 溝通。
 - 每個模組都應能以最小任務獨立實作、測試、回歸。
 - 相機硬體狀態不可因單次查詢失敗而被立即重置。
@@ -10,17 +10,21 @@
 
 ## 模組總覽
 
-- [runtime-bootstrap](runtime-bootstrap.md): startup options、runtime path、version、single instance、main lifecycle。
-- [logging-runtime-state](logging-runtime-state.md): log file、stdout/stderr redirect、crash log。
-- [camera-model-config](camera-model-config.md): CameraConfig、CameraDescriptor、camera_map。
-- [recording-session](recording-session.md): segmented video writer。
-- [camera-session](camera-session.md): single camera preview、snapshot、recording、property 邏輯（不含 UI）。
-- [camera-controls-ui](camera-controls-ui.md): 屬性面板 UI（Tk），跟 camera-session 分離。
-- [camera-manager](camera-manager.md): discovery、logical slot、hot-plug、session ownership。
-- [command-router](command-router.md): command/query dispatch、auth、runtime info。
-- [grpc-service](grpc-service.md): SEE gRPC service adapter。
-- [cli-interface](cli-interface.md): interactive terminal command parsing。
-- [packaging-deployment](packaging-deployment.md): PyInstaller build and dist layout。
+| 模組 | 原始碼 | 說明 |
+|---|---|---|
+| [runtime-bootstrap](runtime-bootstrap.md) | `SuperEagleEye.py`、`see_runtime/bootstrap.py`、`see_runtime/runtime_paths.py` | startup options、runtime path、version、single instance、main lifecycle |
+| [logging-runtime-state](logging-runtime-state.md) | `see_runtime/logging_setup.py`、`see_runtime/runtime_paths.py` | log file、stdout/stderr redirect、crash log |
+| [camera-model-config](camera-model-config.md) | `see_runtime/camera_models.py` | CameraConfig、CameraDescriptor、camera_map |
+| [recording-session](recording-session.md) | `see_runtime/camera_models.py` | segmented video writer |
+| [camera-session](camera-session.md) | `see_runtime/camera_session.py`、`see_runtime/dshow_camera_control.py` | single camera preview、snapshot、recording、property 邏輯（不含 UI） |
+| [camera-controls-ui](camera-controls-ui.md) | `see_runtime/camera_controls_ui.py` | 屬性面板 UI（Tk），跟 camera-session 分離 |
+| [camera-manager](camera-manager.md) | `see_runtime/camera_manager.py` | discovery、logical slot、hot-plug、session ownership |
+| [command-router](command-router.md) | `see_runtime/command_router.py` | command/query dispatch、auth、runtime info |
+| [grpc-service](grpc-service.md) | `see_runtime/grpc_service.py`、`see_runtime/grpc_server_controller.py` | SEE gRPC service adapter |
+| [cli-interface](cli-interface.md) | `see_runtime/cli.py` | interactive terminal command parsing |
+| [packaging-deployment](packaging-deployment.md) | `SuperEagleEye.spec`、`build_SuperEagleEye.ps1` | PyInstaller build and dist layout |
+
+其餘沒有獨立文件、屬於共用底層的模組：`see_runtime/constants.py`（常數）、`see_runtime/errors.py`（`CommandError`、`acquired_lock`）、`see_runtime/protocol_utils.py`（CLI 與 gRPC 共用的 wire-format helper）、`see_runtime/shell_utils.py`（subprocess 輸出解碼）。
 
 ## Runtime Flow
 
