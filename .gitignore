@@ -39,6 +39,9 @@ superCarter@*
 */.vs/
 **/.vs/
 .vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+
 .idea/
 *.user
 *.suo
