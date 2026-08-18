@@ -4,6 +4,10 @@
 
 負責單一 logical camera 的 preview thread、OpenCV capture、snapshot、recording、camera properties 邏輯（brightness/focus）。**不負責 UI**——面板視窗由 `CameraControlsUI`（見 `doc/camera-controls-ui.md`）負責，`CameraSession` 只暴露 thread-safe 的資料/方法供其讀寫。
 
+## Source
+
+`see_runtime/camera_session.py`（原生 DirectShow 控制邏輯在 `see_runtime/dshow_camera_control.py`）
+
 ## Public Surface
 
 - `CameraSession.start()`

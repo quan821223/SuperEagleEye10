@@ -8,9 +8,9 @@ This is the default deployment path for release builds.
 
 Flow:
 1. Run `build_SuperEagleEye.ps1` in the repository root.
-2. The script packages `SuperEagleEye.py` into `SuperEagleEye.exe`.
-3. The packaged runtime is copied into `dist\SuperEagleEye_dist`.
-4. During `SuperCarter` publish, those files are included in `config\SuperEagleEye\...`.
+2. The script packages `SuperEagleEye.py` with PyInstaller into a temporary `SuperEagleEye.exe`.
+3. The script renames the executable to `SuperEagleEye_v{version}.exe` and copies the packaged runtime into `dist\SuperEagleEye_v{version}_dist`.
+4. The script creates `dist\SuperEagleEye_v{version}_dist.7z` with a versioned top-level folder and no unversioned executable copy.
 
 Relevant files:
 - `build_SuperEagleEye.ps1`
@@ -43,8 +43,8 @@ This is for development and debugging, not the standard release deployment path.
 
 `SuperCarter` resolves SEE in this order:
 
-1. `%LOCALAPPDATA%\SEE\runtime\SuperEagleEye\SuperEagleEye.exe`
-2. `<SuperCarter publish>\config\SuperEagleEye\SuperEagleEye.exe`
+1. `%LOCALAPPDATA%\SEE\runtime\SuperEagleEye\SuperEagleEye_v{version}.exe`
+2. `<SuperCarter publish>\config\SuperEagleEye\SuperEagleEye_v{version}.exe`
 
 ## Shared Secret
 
@@ -68,3 +68,4 @@ Current fields:
 - Use publish deployment for normal release delivery.
 - Use local override deployment for testing a new SEE runtime quickly.
 - Use direct Python execution only for development and debugging.
+

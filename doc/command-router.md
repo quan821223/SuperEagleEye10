@@ -4,6 +4,10 @@
 
 負責 command/query dispatch、auth validation、connection state、runtime info payload。
 
+## Source
+
+`see_runtime/command_router.py`
+
 ## Public Surface
 
 - `CommandRouter.execute()`

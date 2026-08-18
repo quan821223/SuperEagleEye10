@@ -4,6 +4,10 @@
 
 負責相機屬性面板的 UI 呈現（brightness/focus slider、reset/close 按鈕），取代舊版 cv2 HighGUI trackbar 面板。是 process 內唯一跑 Tk `mainloop()` 的地方。
 
+## Source
+
+`see_runtime/camera_controls_ui.py`
+
 ## Public Surface
 
 - `CameraControlsUI.start()`

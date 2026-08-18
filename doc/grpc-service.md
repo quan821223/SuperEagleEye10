@@ -4,6 +4,10 @@
 
 負責將 `SC_communication_gRPC.proto` 的 RPC request 轉接到 `CommandRouter`。
 
+## Source
+
+`see_runtime/grpc_service.py`（`See10Service`）、`see_runtime/grpc_server_controller.py`（`GrpcServerController`）
+
 ## Public Surface
 
 - `See10Service.Heartbeat()`
