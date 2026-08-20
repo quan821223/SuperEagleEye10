@@ -23,6 +23,16 @@ LOGGER = logging.getLogger("SuperEagleEye")
 
 
 class CommandRouter:
+    COMMAND_ALIASES = {
+        "SNAPSHOT": "CAPTURE_SNAPSHOT",
+        "TAKE_SNAPSHOT": "CAPTURE_SNAPSHOT",
+        "CAPTURE": "CAPTURE_SNAPSHOT",
+        "RECORD_START": "START_RECORD",
+        "START_RECORDING": "START_RECORD",
+        "RECORD_STOP": "STOP_RECORD",
+        "STOP_RECORDING": "STOP_RECORD",
+    }
+
     def __init__(self, camera_manager: CameraManager, output_dir: Path, auth_token: str, runtime_info: Optional[Dict[str, object]] = None):
         self.camera_manager = camera_manager
         self.output_dir = output_dir
@@ -69,10 +79,12 @@ class CommandRouter:
 
     def execute(self, command: str, camera_id: str = "cam0", args: Optional[Dict[str, object]] = None, source: str = "cli") -> Dict[str, object]:
         args = args or {}
-        normalized = command.strip().upper()
+        raw_command = command.strip().upper()
+        normalized = self.COMMAND_ALIASES.get(raw_command, raw_command)
         LOGGER.info(
-            "command_execute_requested source=%s command=%s camera_id=%s args=%s",
+            "command_execute_requested source=%s command=%s normalized=%s camera_id=%s args=%s",
             source,
+            raw_command,
             normalized,
             camera_id or "cam0",
             args,
@@ -193,7 +205,9 @@ class CommandRouter:
                 raise CommandError("INVALID_ARGUMENT", "swap requires source_camera_id and target_camera_id")
             return self.camera_manager.swap_cameras(source_camera_id, target_camera_id)
         if command == "START_RECORD":
-            default_duration = self.camera_manager.get_session(camera_id).config.recording_duration if (camera_id or "").strip().lower() != "all" else self.camera_manager.default_config.recording_duration
+            default_duration = self.camera_manager.default_config.recording_duration
+            if "duration_sec" not in args and (camera_id or "").strip().lower() != "all":
+                default_duration = self.camera_manager.get_session(camera_id).config.recording_duration
             duration_sec = coerce_int(args.get("duration_sec", default_duration), "duration_sec", min_value=1)
             output_dir = Path(args["output_dir"]) if args.get("output_dir") else None
             file_prefix = str(args.get("file_prefix", camera_id))

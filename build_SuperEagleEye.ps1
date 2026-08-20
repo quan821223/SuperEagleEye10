@@ -37,13 +37,17 @@ if ([string]::IsNullOrWhiteSpace($runtimeVersion))
 {
     throw "version.json does not contain a valid version."
 }
-$safeRuntimeVersion = $runtimeVersion -replace '[^0-9A-Za-z._-]', '_'
-$versionedExeName = "SuperEagleEye_v$safeRuntimeVersion.exe"
-$versionedDistFolderName = "SuperEagleEye_v${safeRuntimeVersion}_dist"
-$publishRuntimeRoot = Join-Path $distRoot $versionedDistFolderName
-$versionedArchiveName = "$versionedDistFolderName.7z"
-$versionedArchivePath = Join-Path $distRoot $versionedArchiveName
-$legacyArchivePath = Join-Path $distRoot "SuperEagleEye_dist.7z"
+$distFolderName = "SuperEagleEye_dist"
+$publishRuntimeRoot = Join-Path $distRoot $distFolderName
+$archiveName = "$distFolderName.7z"
+$archivePath = Join-Path $distRoot $archiveName
+$legacyVersionedRuntimeRoots = @()
+$legacyVersionedArchivePaths = @()
+if (Test-Path $distRoot)
+{
+    $legacyVersionedRuntimeRoots = @(Get-ChildItem -LiteralPath $distRoot -Directory -Filter "SuperEagleEye_v*_dist" | Select-Object -ExpandProperty FullName)
+    $legacyVersionedArchivePaths = @(Get-ChildItem -LiteralPath $distRoot -File -Filter "SuperEagleEye_v*_dist.7z" | Select-Object -ExpandProperty FullName)
+}
 
 if (-not $env:UV_CACHE_DIR)
 {
@@ -56,11 +60,19 @@ Invoke-Step -Command { py -3 --version } -ErrorMessage "Python 3 is required but
 Invoke-Step -Command { py -3 -m uv --version } -ErrorMessage "uv is required but was not found. Install it with: py -3 -m pip install uv"
 Invoke-Step -Command { py -3 -m uv sync --frozen } -ErrorMessage "Failed to synchronize the locked Python environment"
 
-foreach ($path in @($buildRoot, $publishRuntimeRoot, $legacyPublishRuntimeRoot, $legacyToolsRuntimeRoot))
+foreach ($path in @($buildRoot, $publishRuntimeRoot, $legacyPublishRuntimeRoot, $legacyToolsRuntimeRoot) + $legacyVersionedRuntimeRoots)
 {
     if (Test-Path $path)
     {
         Remove-Item -LiteralPath $path -Recurse -Force
+    }
+}
+
+foreach ($path in $legacyVersionedArchivePaths)
+{
+    if (Test-Path $path)
+    {
+        Remove-Item -LiteralPath $path -Force
     }
 }
 
@@ -87,26 +99,19 @@ Invoke-Step -Command {
 
 $tempRuntimeRoot = Join-Path $tempDistRoot "SuperEagleEye"
 $tempExePath = Join-Path $tempRuntimeRoot "SuperEagleEye.exe"
-$tempVersionedExePath = Join-Path $tempRuntimeRoot $versionedExeName
 
 if (-not (Test-Path $tempExePath))
 {
     throw "PyInstaller completed without producing build\__dist\SuperEagleEye\SuperEagleEye.exe"
 }
 
-Move-Item $tempExePath $tempVersionedExePath -Force
 Copy-Item $versionPath (Join-Path $tempRuntimeRoot "version.json") -Force
 New-Item -ItemType Directory -Path $publishRuntimeRoot -Force | Out-Null
 Copy-Item (Join-Path $tempRuntimeRoot "*") $publishRuntimeRoot -Recurse -Force
 
-if (-not (Test-Path (Join-Path $publishRuntimeRoot $versionedExeName)))
+if (-not (Test-Path (Join-Path $publishRuntimeRoot "SuperEagleEye.exe")))
 {
-    throw "Versioned executable was not produced: $versionedExeName"
-}
-
-if (Test-Path $legacyArchivePath)
-{
-    Remove-Item -LiteralPath $legacyArchivePath -Force
+    throw "Executable was not produced: SuperEagleEye.exe"
 }
 
 if (Test-Path $packageRoot)
@@ -114,22 +119,22 @@ if (Test-Path $packageRoot)
     Remove-Item -LiteralPath $packageRoot -Recurse -Force
 }
 
-$versionedPackageRoot = Join-Path $packageRoot $versionedDistFolderName
-New-Item -ItemType Directory -Path $versionedPackageRoot -Force | Out-Null
-Copy-Item (Join-Path $tempRuntimeRoot "*") $versionedPackageRoot -Recurse -Force
+$packageRuntimeRoot = Join-Path $packageRoot $distFolderName
+New-Item -ItemType Directory -Path $packageRuntimeRoot -Force | Out-Null
+Copy-Item (Join-Path $tempRuntimeRoot "*") $packageRuntimeRoot -Recurse -Force
 
-if (Test-Path $versionedArchivePath)
+if (Test-Path $archivePath)
 {
-    Remove-Item -LiteralPath $versionedArchivePath -Force
+    Remove-Item -LiteralPath $archivePath -Force
 }
 
 Invoke-Step -Command {
-    py -3 -m uv run python -c "import sys; from pathlib import Path; import py7zr; archive = Path(sys.argv[1]); source = Path(sys.argv[2]); z = py7zr.SevenZipFile(archive, 'w', filters=[{'id': py7zr.FILTER_COPY}]); z.writeall(source, arcname=source.name); z.close()" $versionedArchivePath $versionedPackageRoot
-} -ErrorMessage "Failed to create versioned 7z package"
+    py -3 -m uv run python -c "import sys; from pathlib import Path; import py7zr; archive = Path(sys.argv[1]); source = Path(sys.argv[2]); z = py7zr.SevenZipFile(archive, 'w', filters=[{'id': py7zr.FILTER_COPY}]); z.writeall(source, arcname=source.name); z.close()" $archivePath $packageRuntimeRoot
+} -ErrorMessage "Failed to create 7z package"
 
-if (-not (Test-Path $versionedArchivePath))
+if (-not (Test-Path $archivePath))
 {
-    throw "Versioned 7z package was not produced: $versionedArchiveName"
+    throw "7z package was not produced: $archiveName"
 }
 
 Pop-Location

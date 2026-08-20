@@ -15,6 +15,27 @@
 
 ---
 
+# [1.4.1] - 2026-08-20
+
+**新增**
+
+* feat(Command): gRPC 控制命令新增 `SNAPSHOT`、`TAKE_SNAPSHOT`、`CAPTURE`、`RECORD_START`、`START_RECORDING`、`RECORD_STOP`、`STOP_RECORDING` alias，兼容 DDS / SuperCarter 既有命令名稱
+
+**修復**
+
+* fix(Snapshot): 修正 `CameraSession` 預設截圖檔名流程缺少 `re` import，避免 `snapshot` / `CAPTURE_SNAPSHOT` 命令收到後無法產生圖片
+* fix(Command): 截圖與錄影命令若指定相機尚未開啟，會先嘗試開啟該 logical slot，並在寫檔前短暫等待首幀，降低剛開機收到命令時 `NO_FRAME_YET` 的機率
+* fix(CLI): 小黑窗執行命令失敗時會顯示 `error[CODE]: message`，不再只印 ack 造成看起來沒有反應
+
+**調整**
+
+* refactor(Build): 打包輸出恢復固定資料夾與檔名：`dist\SuperEagleEye_dist\SuperEagleEye.exe`，並產生 `dist\SuperEagleEye_dist.7z`；build 時會清除舊的 `SuperEagleEye_v*_dist` 版本化輸出
+* perf(Startup): 啟動預設只依序嘗試開啟第一個可成功出畫面的相機，不再一次開啟所有 discovered cameras，以縮短啟動到預覽畫面出現的時間
+* docs(Build): 更新 README 與 packaging deployment 文件，對齊固定 `SuperEagleEye_dist` 打包結構
+* version: SEE10 runtime 版本由 `1.4.0` 進版到 `1.4.1`
+
+---
+
 # [1.4.0] - 2026-08-18
 
 **新增**
