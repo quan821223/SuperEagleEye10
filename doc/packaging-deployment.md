@@ -11,7 +11,7 @@
 - `build_SuperEagleEye.ps1`
 - `build_SuperEagleEye.bat`
 - `SuperEagleEye.spec`
-- `dist\SuperEagleEye_v{version}_dist`
+- `dist\SuperEagleEye_dist`
 
 ## Dependencies
 
@@ -40,12 +40,12 @@
 - `build_SuperEagleEye.ps1` runs `py -3 -m uv sync --frozen` before packaging and then invokes PyInstaller through `py -3 -m uv run pyinstaller`.
 - If `UV_CACHE_DIR` is not already set, the build script points uv cache to `.uv-cache` under the project root. This avoids permission issues on locked-down Windows accounts and the folder is ignored by git.
 - `build_SuperEagleEye.bat` remains the stable Windows entry point and continues to call the PowerShell script.
-- Packaging output 會被複製到版本化 runtime folder，例如 `dist\SuperEagleEye_v1.4.0_dist`。
+- Packaging output 會被複製到固定 runtime folder：`dist\SuperEagleEye_dist`。
 - Frozen runtime 的 `BASE_DIR` 以 executable folder 為準。
 - Logs 在 frozen executable 旁的 `logs` folder。
 - Runtime 啟動時仍會讀取 `camera_map.json` 與 `version.json`。
-- Packaging renames the PyInstaller executable from `SuperEagleEye.exe` to `SuperEagleEye_v{version}.exe`, where `{version}` is read from `version.json`. The unversioned executable is not kept in the final runtime folder or archive.
-- Packaging also creates a versioned 7z archive at `dist\SuperEagleEye_v{version}_dist.7z` through `py7zr` and removes the legacy unversioned `dist\SuperEagleEye_dist.7z` archive if it exists. The archive contains a versioned top-level folder named `SuperEagleEye_v{version}_dist`.
+- Packaging keeps the PyInstaller executable name as `SuperEagleEye.exe`.
+- Packaging also creates `dist\SuperEagleEye_dist.7z` through `py7zr`. The archive contains a top-level folder named `SuperEagleEye_dist`.
 - （v1.4.0）`SuperEagleEye.py` 的邏輯已拆分進 `see_runtime/` 套件（見 `doc/detailed-design.md` 的模組總覽）。PyInstaller 的 `Analysis(['SuperEagleEye.py'])` 會靜態追蹤 import 自動收錄 `see_runtime.*` 底下所有模組，不需要在 `SuperEagleEye.spec` 或 `--hiddenimports` 額外列出；這點已透過實際跑一次完整 build 並檢查 `build\SuperEagleEye\xref-SuperEagleEye.html` 確認過。
 
 ## Build Commands
@@ -62,22 +62,22 @@ Package the runtime:
 .\build_SuperEagleEye.bat
 ```
 
-Expected executable outputs under `dist\SuperEagleEye_v1.4.0_dist`:
+Expected executable outputs under `dist\SuperEagleEye_dist`:
 
 ```text
-SuperEagleEye_v1.4.0.exe
+SuperEagleEye.exe
 ```
 
 Expected archive output under `dist`:
 
 ```text
-SuperEagleEye_v1.4.0_dist.7z
+SuperEagleEye_dist.7z
 ```
 
 Expected top-level folder inside the archive:
 
 ```text
-SuperEagleEye_v1.4.0_dist\
+SuperEagleEye_dist\
 ```
 
 The PowerShell script performs the locked environment sync and PyInstaller build:
@@ -97,30 +97,28 @@ When dependency versions intentionally change, update `pyproject.toml`, run `py 
 2. Verify `build_SuperEagleEye.ps1` exists beside the batch file.
 3. Run the PowerShell script with `powershell -ExecutionPolicy Bypass -File`.
 4. Stop with an error if the PowerShell build fails.
-5. Read `version.json` after a successful build.
-6. Print the versioned dist folder, versioned executable path, executable list, and archive list.
+5. Print the dist folder, executable path, executable list, and archive list.
 
 `build_SuperEagleEye.ps1` performs the package build:
 
-1. Read `version.json` and sanitize the version for file and folder names.
+1. Read `version.json` and verify the runtime version is present.
 2. Set `.uv-cache` under the project root as `UV_CACHE_DIR` when no cache directory is already configured.
 3. Verify Python 3 and uv are available.
 4. Run `py -3 -m uv sync --frozen` so the build uses the locked dependency set from `uv.lock`.
-5. Remove old build output, the current versioned dist folder, and legacy unversioned publish folders.
+5. Remove old build output and the current `dist\SuperEagleEye_dist` folder.
 6. Remove the generated PyInstaller spec file when it exists.
 7. Run PyInstaller through `py -3 -m uv run pyinstaller` into `build\__dist\SuperEagleEye`.
-8. Rename `build\__dist\SuperEagleEye\SuperEagleEye.exe` to `SuperEagleEye_v{version}.exe`.
+8. Keep `build\__dist\SuperEagleEye\SuperEagleEye.exe` unchanged.
 9. Copy `version.json` into the temporary runtime folder.
-10. Copy the temporary runtime folder into `dist\SuperEagleEye_v{version}_dist`.
-11. Remove the legacy unversioned archive if it exists.
-12. Copy the temporary runtime folder into `build\__package\SuperEagleEye_v{version}_dist`.
-13. Create `dist\SuperEagleEye_v{version}_dist.7z` from that versioned package folder.
+10. Copy the temporary runtime folder into `dist\SuperEagleEye_dist`.
+11. Copy the temporary runtime folder into `build\__package\SuperEagleEye_dist`.
+12. Create `dist\SuperEagleEye_dist.7z` from that package folder.
 
 ## Independent Test Strategy
 
 - 執行 `py -3 -m uv sync --frozen`。
 - 執行 build script。
-- 確認 packaged output 只包含 `SuperEagleEye_v{version}.exe`，並包含 proto generated files、camera map、version。
+- 確認 packaged output 包含 `SuperEagleEye.exe`、proto generated files、camera map、version。
 - 從 packaged folder 啟動並確認 log path。
 - 透過 SuperCarter publish folder 啟動並確認 gRPC port。
 
@@ -132,8 +130,8 @@ When dependency versions intentionally change, update `pyproject.toml`, run `py 
 - [x] 建立 PowerShell build script
 - [x] 建立 batch wrapper
 - [x] 複製 dist 到 runtime folder
-- [x] 產生版本化 dist folder 與 7z archive
-- [x] 最終 package 只保留版本化 executable
+- [x] 產生固定 dist folder 與 7z archive
+- [x] 最終 package 保留 `SuperEagleEye.exe`
 - [ ] 增加 packaging smoke checklist
 
 

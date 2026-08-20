@@ -223,6 +223,8 @@ def cli_loop(router: CommandRouter):
             else:
                 result = router.execute(command, camera_id, args)
                 print(f"ack: {bytes_to_hex(result['ack'])}")
+                if not result["success"]:
+                    print(f"error[{result['code']}]: {result['message']}")
                 if result["payload"]:
                     print(json.dumps(result["payload"], ensure_ascii=False, indent=2))
                 if command == "SHUTDOWN":
