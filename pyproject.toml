@@ -1,6 +1,6 @@
 [project]
 name = "super-eagle-eye"
-version = "1.4.0"
+version = "1.4.1"
 description = "SuperEagleEye SEE_1.0 camera runtime"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"

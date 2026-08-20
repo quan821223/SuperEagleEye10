@@ -5,6 +5,7 @@ the controls panel window lives in `camera_controls_ui.py`. See
 """
 
 import logging
+import re
 import threading
 import time
 from pathlib import Path
@@ -27,6 +28,7 @@ class CameraSession:
     READ_FAILURE_LOG_THRESHOLD = 3
     UNAVAILABLE_FRAME_TEXT = "NO SIGNAL"
     INITIAL_OPEN_WAIT_SEC = 1.5
+    COMMAND_FRAME_WAIT_SEC = 3.0
     PROP_COMMIT_DEBOUNCE_SEC = 0.4
     CAMERA_PROP_SPECS = [
         {"name": "brightness", "cap_prop": cv2.CAP_PROP_BRIGHTNESS, "max": 100, "default": 50, "scale": 100.0, "offset": 0.0, "auto_disable_prop": None},
@@ -103,6 +105,18 @@ class CameraSession:
 
     def wait_for_initial_open(self, timeout_sec: float = INITIAL_OPEN_WAIT_SEC) -> bool:
         return self.initial_open_event.wait(timeout_sec)
+
+    def wait_for_frame(self, timeout_sec: float = COMMAND_FRAME_WAIT_SEC) -> bool:
+        deadline = time.perf_counter() + max(0.0, timeout_sec)
+        while time.perf_counter() <= deadline:
+            with self.lock:
+                if self.opened and self.latest_frame is not None:
+                    return True
+                if self.open_retry_exhausted or self.stop_event.is_set():
+                    return False
+            time.sleep(0.05)
+        with self.lock:
+            return self.opened and self.latest_frame is not None
 
     @staticmethod
     def _backend_candidates_full():
@@ -745,6 +759,7 @@ class CameraSession:
             )
 
     def snapshot(self, output_path: Optional[Path] = None, command_name: Optional[str] = None) -> Path:
+        self.wait_for_frame()
         with acquired_lock(
             self.lock,
             SESSION_LOCK_TIMEOUT_SEC,
@@ -781,6 +796,7 @@ class CameraSession:
         return normalized or "SNAPSHOT"
 
     def start_recording(self, duration_sec: Optional[int] = None, output_dir: Optional[Path] = None, file_prefix: Optional[str] = None) -> None:
+        self.wait_for_frame()
         with acquired_lock(
             self.lock,
             SESSION_LOCK_TIMEOUT_SEC,

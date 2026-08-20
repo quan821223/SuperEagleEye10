@@ -467,7 +467,6 @@ class CameraManager:
             self._save_alias_config()
         LOGGER.info("camera_manager_open_defaults changed=%s", changed)
 
-        opened_any = False
         for slot_index in range(self.MAX_LOGICAL_CAMERAS):
             camera_id = self._slot_name(slot_index)
             descriptor = self.logical_slots.get(camera_id)
@@ -479,11 +478,21 @@ class CameraManager:
                 descriptor.device_index,
                 descriptor.friendly_name,
             )
-            self.open_camera(camera_id, refresh=False, wait_initial=True)
-            opened_any = True
+            status = self.open_camera(camera_id, refresh=False, wait_initial=True)
+            if status.get("opened"):
+                LOGGER.info("camera_manager_default_opened camera_id=%s", camera_id)
+                return
+            LOGGER.warning(
+                "camera_default_open_no_frame camera_id=%s device_index=%s trying_next=true",
+                camera_id,
+                descriptor.device_index,
+            )
+            try:
+                self.close_camera(camera_id)
+            except CommandError:
+                pass
 
-        if not opened_any:
-            LOGGER.warning("camera_manager_no_defaults_discovered")
+        LOGGER.warning("camera_manager_no_defaults_discovered")
 
     @staticmethod
     def _slot_name(slot_index: int) -> str:
@@ -943,6 +952,19 @@ class CameraManager:
             raise CommandError("CAMERA_NOT_FOUND", f"{camera_id} not found")
         return session
 
+    def _get_or_open_session(self, camera_id: str, wait_initial: bool = True) -> CameraSession:
+        with acquired_lock(
+            self.lock,
+            MANAGER_LOCK_TIMEOUT_SEC,
+            "CAMERA_BUSY",
+            "Camera manager is busy recovering hardware state",
+        ):
+            session = self.sessions.get(camera_id)
+        if session is not None:
+            return session
+        self.open_camera(camera_id, refresh=True, wait_initial=wait_initial)
+        return self.get_session(camera_id)
+
     def open_camera_panel(self, camera_id: str) -> Dict[str, object]:
         session = self.get_session(camera_id)
         result = session.open_controls_panel()
@@ -974,7 +996,7 @@ class CameraManager:
             command_name,
         )
         if normalized != "all":
-            session = self.get_session(camera_id)
+            session = self._get_or_open_session(camera_id, wait_initial=True)
             snapshot_path = session.snapshot(output_path, command_name=command_name)
             result = {"camera_id": camera_id, "snapshot_path": str(snapshot_path)}
             LOGGER.info(
@@ -1017,7 +1039,7 @@ class CameraManager:
     def start_recording(self, camera_id: str, duration_sec: int, output_dir: Optional[Path] = None, file_prefix: Optional[str] = None) -> Dict[str, object]:
         normalized = (camera_id or "cam0").strip().lower()
         if normalized != "all":
-            session = self.get_session(camera_id)
+            session = self._get_or_open_session(camera_id, wait_initial=True)
             session.start_recording(duration_sec=duration_sec, output_dir=output_dir, file_prefix=file_prefix or camera_id)
             return {"camera_id": camera_id, "recording": True, "duration_sec": duration_sec}
 
